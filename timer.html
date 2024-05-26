@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>倒计时器</title>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .timer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .time-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    #timer {
+        font-size: 24px;
+        margin-top: 20px;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<div class="timer-container">
+    <div class="time-controls">
+        <button id="hourMinus" onclick="adjustTime('hour', -1)">-</button>
+        <span id="hourValue">0</span> 小时
+        <button id="hourPlus" onclick="adjustTime('hour', 1)">+</button>
+    </div>
+    <div class="time-controls">
+        <button id="minuteMinus" onclick="adjustTime('minute', -1)">-</button>
+        <span id="minuteValue">0</span> 分钟
+        <button id="minutePlus" onclick="adjustTime('minute', 1)">+</button>
+    </div>
+    <div class="time-controls">
+        <button id="secondMinus" onclick="adjustTime('second', -1)">-</button>
+        <span id="secondValue">0</span> 秒钟
+        <button id="secondPlus" onclick="adjustTime('second', 1)">+</button>
+    </div>
+    <button id="startButton" onclick="startCountdown()">开始倒计时</button>
+    <button id="pauseButton" onclick="pauseCountdown()" style="display: none;">暂停</button>
+    <button id="resetButton" onclick="resetCountdown()" style="display: none;">重新设定时间</button>
+    <p id="timer"></p>
+</div>
+
+<script>
+    let countdownInterval;
+    let isPaused = false;
+    let remainingTime = 0;
+
+    function adjustTime(unit, value) {
+        let currentValue = parseInt(document.getElementById(unit + 'Value').innerHTML);
+        let newValue = currentValue + value;
+        if(newValue >= 0) {
+            document.getElementById(unit + 'Value').innerHTML = newValue;
+        }
+    }
+
+    function startCountdown() {
+	
+        document.getElementById("startButton").style.display = "none";
+        document.getElementById("pauseButton").style.display = "inline";
+        document.getElementById("resetButton").style.display = "inline";
+
+        let hours = parseInt(document.getElementById("hourValue").innerHTML);
+        let minutes = parseInt(document.getElementById("minuteValue").innerHTML);
+        let seconds = parseInt(document.getElementById("secondValue").innerHTML);
+
+        remainingTime = (hours * 60 * 60) + (minutes * 60) + seconds;
+
+        countdownInterval = setInterval(function () {
+            if (!isPaused) {
+                remainingTime--;
+                let hours = Math.floor(remainingTime / 3600);
+                let minutes = Math.floor((remainingTime % 3600) / 60);
+                let seconds = remainingTime % 60;
+
+                document.getElementById("timer").innerHTML = hours + " 小时 " + minutes + " 分 " + seconds + " 秒";
+
+                if (remainingTime <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById("timer").innerHTML = "倒计时结束!";
+                    document.getElementById("startButton").style.display = "inline";
+                    document.getElementById("pauseButton").style.display = "none";
+                    document.getElementById("resetButton").style.display = "none";
+                }
+            }
+        }, 1000);
+    }
+
+    function pauseCountdown() {
+        isPaused = !isPaused;
+        if (isPaused) {
+            document.getElementById("pauseButton").innerHTML = "继续";
+        } else {
+            document.getElementById("pauseButton").innerHTML = "暂停";
+        }
+    }
+
+    function resetCountdown() {
+        isPaused = false;
+        clearInterval(countdownInterval);
+        document.getElementById("startButton").style.display = "inline";
+        document.getElementById("pauseButton").style.display = "none";
+        document.getElementById("resetButton").style.display = "none";
+        document.getElementById("timer").innerHTML = "";
+        document.getElementById("hourValue").innerHTML = "0";
+        document.getElementById("minuteValue").innerHTML = "0";
+        document.getElementById("secondValue").innerHTML = "0";
+        remainingTime = 0;
+    }
+</script>
+</body>
+</html>
