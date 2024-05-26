@@ -41,33 +41,42 @@
     }
 
     #timer {
-        font-size: 24px;
+        font-size: 50px;
         margin-top: 20px;
         text-align: center;
     }
 </style>
 </head>
 <body>
-<div class="timer-container">
-    <div class="time-controls">
+
+<div class="timer-container" id="controls">
+<p id="timer"></p>
+    <div class="time-controls" id="hourControl">
+        <button id="hourMinus10" onclick="adjustTime('hour', -10)">-10</button>
         <button id="hourMinus" onclick="adjustTime('hour', -1)">-</button>
         <span id="hourValue">0</span> 小时
         <button id="hourPlus" onclick="adjustTime('hour', 1)">+</button>
+        <button id="hourPlus10" onclick="adjustTime('hour', 10)">+10</button>
     </div>
-    <div class="time-controls">
+    <div class="time-controls" id="minuteControl">
+        <button id="minuteMinus10" onclick="adjustTime('minute', -10)">-10</button>
         <button id="minuteMinus" onclick="adjustTime('minute', -1)">-</button>
         <span id="minuteValue">0</span> 分钟
         <button id="minutePlus" onclick="adjustTime('minute', 1)">+</button>
+        <button id="minutePlus10" onclick="adjustTime('minute', 10)">+10</button>
     </div>
-    <div class="time-controls">
+    <div class="time-controls" id="secondControl">
+        <button id="secondMinus10" onclick="adjustTime('second', -10)">-10</button>
         <button id="secondMinus" onclick="adjustTime('second', -1)">-</button>
         <span id="secondValue">0</span> 秒钟
         <button id="secondPlus" onclick="adjustTime('second', 1)">+</button>
+        <button id="secondPlus10" onclick="adjustTime('second', 10)">+10</button>
     </div>
     <button id="startButton" onclick="startCountdown()">开始倒计时</button>
+ <div>
     <button id="pauseButton" onclick="pauseCountdown()" style="display: none;">暂停</button>
-    <button id="resetButton" onclick="resetCountdown()" style="display: none;">重新设定时间</button>
-    <p id="timer"></p>
+    <button id="resetButton" onclick="resetCountdown()" style="display: none;">重置</button>
+ </div>
 </div>
 
 <script>
@@ -84,7 +93,9 @@
     }
 
     function startCountdown() {
-	
+	document.getElementById("hourControl").style.display = "none";
+        document.getElementById("minuteControl").style.display = "none";
+        document.getElementById("secondControl").style.display = "none";
         document.getElementById("startButton").style.display = "none";
         document.getElementById("pauseButton").style.display = "inline";
         document.getElementById("resetButton").style.display = "inline";
@@ -109,7 +120,7 @@
                     document.getElementById("timer").innerHTML = "倒计时结束!";
                     document.getElementById("startButton").style.display = "inline";
                     document.getElementById("pauseButton").style.display = "none";
-                    document.getElementById("resetButton").style.display = "none";
+                    document.getElementById("resetButton").style.display = "inline";
                 }
             }
         }, 1000);
@@ -127,6 +138,9 @@
     function resetCountdown() {
         isPaused = false;
         clearInterval(countdownInterval);
+	document.getElementById("hourControl").style.display = "flex";
+        document.getElementById("minuteControl").style.display = "flex";
+        document.getElementById("secondControl").style.display = "flex";
         document.getElementById("startButton").style.display = "inline";
         document.getElementById("pauseButton").style.display = "none";
         document.getElementById("resetButton").style.display = "none";
