@@ -10,4 +10,4 @@ For more details see [here](https://github.com/Mirpri/function-grapher).
 
 ## timer
 An online timer. <br>
-[Launch](https://github.com/Mirpri/function-grapher).
+[Launch](https://mirpri.github.io/timer.html).
