@@ -6,8 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>去向分布图</title>
 </head>
+
+<style>
+    .button {
+        text-align: center;
+        position: relative;
+        background-color: #e0f3f8;
+        border:2px solid #008cba;
+        border-radius:8px;
+        font-size: 16px;
+        color:  #008cba;
+        padding: 5px 10px;
+        margin: 4px 2px;
+        text-align: center;
+        -webkit-transition-duration: 0.4s; /* Safari */
+        transition-duration: 0.4s;
+        text-decoration: none;
+        overflow: hidden;
+        cursor: pointer;
+    }
+     
+    .button:after {
+        content: "";
+        background: #a9a9a9;
+        display: block;
+        position: absolute;
+        padding-top: 300%;
+        padding-left: 350%;
+        margin-left: -20px!important;
+        margin-top: -120%;
+        opacity: 0;
+        transition: all 0.8s
+    }
+     
+    .button:active:after {
+        padding: 0;
+        margin: 0;
+        opacity: 1;
+        transition: 0s
+    }
+</style>
+    
+    
+
 <body>
-    <div id="box" style="width: 100%; height: 97vh;"></div>
+    
+    <div id="box" style="display: flex; justify-content: center; align-items: center;width: 100%; height: 93vh;"></div>
     <script src="./echarts.min.js"></script>
     <script src="./china2.js"></script>
     <script>
@@ -116,4 +160,6 @@
         // 使用刚指定的配置项和数据显示图表。
         myEcharts.setOption(option);
     </script>
+
+<button class="button" onclick="window.location.assign('https:\/\/docs.qq.com/form/page/DQlBtZGxOdmxrZFRM')">共享我的数据，查看更多详细信息！</button>
 </body>
