@@ -14,6 +14,7 @@ var lastR, lastC;
 var total, found;
 
 function initPuzzle() {
+    anss=[];
     for(let i=0;i<NOA;i++){
         anss.push(bankT[Math.floor(Math.random()*bankT.length)]);
     }
@@ -36,9 +37,18 @@ function initPuzzle() {
             pflag[i][j] = 0;
         }
     }
+    let tries=0;
     for (let i = 0; i < anss.length; i++) {
         const element = anss[i];
-        while (!addToMtx(element));
+        while (!addToMtx(element)){
+            tries++;
+            //console.log(tries);
+            if(tries>20){
+                initPuzzle();
+                return;
+            }
+        }
+        
     }
     for (let i = 0; i < SZ; i++) {
         for (let j = 0; j < SZ; j++) {
@@ -51,7 +61,6 @@ function initPuzzle() {
             //MTX[i][j] = "A";
         }
     }
-    console.log(MTX);
     generateTable();
 }
 
@@ -109,11 +118,15 @@ function submitWord() {
 }
 
 function addToMtx(word, x = -1, y = -1, i = 0) {
-    if (x == -1 || y == -1)
+    if (x == -1 || y == -1){
+        let tries=0;
         do {
             x = Math.floor(Math.random() * SZ);
             y = Math.floor(Math.random() * SZ);
+            tries++;
+            if(tries>20)return 0;
         } while (MTX[x][y] != null)
+    }
     MTX[x][y] = word.charAt(i);
     console.log(word + " " + x + " " + y + " " + i);
     var nx = x, ny = y;
@@ -153,5 +166,3 @@ function generateTable() {
         table.appendChild(tableRow);
     }
 }
-
-//window.onload = generateTable;
