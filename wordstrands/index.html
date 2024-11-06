@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10x10 Button Table</title>
+    <style>
+        table {
+            border-collapse: collapse;         
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        td {
+            padding: 2px;
+        }
+
+        input,
+        button {
+            padding: 10px;
+            border: 0px;
+            border-radius: 5px;
+            background-color: #eee;
+        }
+
+        button:hover {
+            background-color: beige;
+        }
+        
+        h1,
+        div {
+            margin: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        p {
+            margin-left: 20%;
+            margin-right: 20%;
+            text-align: center;
+        }
+
+        .button-table {
+            width: 50px;
+            height: 50px;
+            border: 0px;
+            border-radius: 10px;
+            background-color: #eee;
+            font-size: large;
+            
+        }
+
+        .button-table:hover {
+            background-color: burlywood;
+        }
+    </style>
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <h1>Word Strands</h1>
+    <div><button id="start-button" style="height: 50px; width: 80%;" onclick="initPuzzle()"> Start! </button></div>
+    <p id="info-p"></p>
+    <div id="input-div" style="text-align: center; display: none;"><input disabled id="input1"> <button onclick="submitWord()">submit</button> <button
+            onclick="clearSelection()">clear</button></div>
+    <div><table id="buttonTable"></table></div>
+    <p id="found-words"></p>
+    <p id="unaccepted-words"></p>
+
+</body>
+
+</html>
