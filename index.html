@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Strands</title>
+    <style>
+        table {
+            border-collapse: collapse;         
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        td {
+            padding: 2px;
+        }
+
+        input,
+        button {
+            padding: 10px;
+            border: 0px;
+            border-radius: 5px;
+            background-color: #eee;
+        }
+
+        button:hover {
+            background-color: beige;
+        }
+        
+        h1,
+        div {
+            margin: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        p {
+            margin-left: 20%;
+            margin-right: 20%;
+            text-align: center;
+        }
+
+        .button-table {
+            width: 40px;
+            height: 40px;
+            border: 0px;
+            border-radius: 10px;
+            background-color: #eee;
+            font-size: large;
+            
+        }
+
+        .button-table:hover {
+            background-color: burlywood !important;
+        }
+    </style>
+    <script src="wordlists.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <h1>Word Strands</h1>
+    <div id="start-div"><button style="height: 50px; width: 80%;margin-bottom: 10px;" onclick="initPuzzle('H')"> Easy </button>
+    <button style="height: 50px; width: 80%;" onclick="initPuzzle('T')"> Hard </button></div>
+    <p id="info-p"></p>
+    <div id="input-div" style="text-align: center; display: none;">
+        <input disabled id="input1">
+        <button onclick="submitWord()">submit</button>
+        <button onclick="clearSelection()">clear</button>
+        <button onclick="requestHint()">hint</button></div>
+    <div><table id="buttonTable"></table></div>
+    <p id="found-words"></p>
+    <p id="unaccepted-words"></p>
+
+</body>
+
+</html>
