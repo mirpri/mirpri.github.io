@@ -43,8 +43,8 @@
         }
 
         .button-table {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border: 0px;
             border-radius: 10px;
             background-color: #eee;
@@ -53,18 +53,23 @@
         }
 
         .button-table:hover {
-            background-color: burlywood;
+            background-color: burlywood !important;
         }
     </style>
+    <script src="wordlists.js"></script>
     <script src="script.js"></script>
 </head>
 
 <body>
     <h1>Word Strands</h1>
-    <div><button id="start-button" style="height: 50px; width: 80%;" onclick="initPuzzle()"> Start! </button></div>
+    <div id="start-div"><button style="height: 50px; width: 80%;margin-bottom: 10px;" onclick="initPuzzle('H')"> Easy </button>
+    <button style="height: 50px; width: 80%;" onclick="initPuzzle('T')"> Hard </button></div>
     <p id="info-p"></p>
-    <div id="input-div" style="text-align: center; display: none;"><input disabled id="input1"> <button onclick="submitWord()">submit</button> <button
-            onclick="clearSelection()">clear</button></div>
+    <div id="input-div" style="text-align: center; display: none;">
+        <input disabled id="input1">
+        <button onclick="submitWord()">submit</button>
+        <button onclick="clearSelection()">clear</button>
+        <button onclick="requestHint()">hint</button></div>
     <div><table id="buttonTable"></table></div>
     <p id="found-words"></p>
     <p id="unaccepted-words"></p>

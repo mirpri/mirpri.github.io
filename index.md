@@ -11,3 +11,7 @@ For more details see [here](https://github.com/Mirpri/function-grapher).
 ## timer
 An online timer. <br>
 [Launch](https://mirpri.github.io/timer.html).
+
+## word strand
+Play word strand word puzzle.<br>
+[Launch](https://mirpri.github.io/wordstrands)
