@@ -1,0 +1,114 @@
+/* 样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background: linear-gradient(90deg, #ff9a9e, #fad0c4, #c3b4e5, #fbc2eb, #ff9a9e, #fad0c4);
+    background-size: 500% 200%;
+    animation: gradientAnimation 15s linear infinite;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+/* 容器 */
+.container {
+    display: flex;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 圣杯布局 */
+.sidebar {
+    width: 240px;
+    background-color: #eee;
+    padding: 15px;
+    flex-shrink: 0;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.main {
+    flex: 1;
+    background-color: #fff;
+    padding: 15px;
+    margin: 0 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.aside {
+    width: 240px;
+    background-color: #eee;
+    padding: 15px;
+    flex-shrink: 0;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+a{
+    text-decoration: none;
+    font-family:"Consolas", "Courier New", Courier, monospace;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    background-color: #e46623;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.aOnSides{
+    background-color: #edad8b;
+}
+
+a:hover{
+    background-color: #8a23e4!important;
+}
+
+h3{
+    font-size: xx-large;
+    padding-top: 30px;
+    font-family: "Brush Script MT", "Dancing Script", "Lobster", "Pacifico", "Segoe Script", "Cursive", sans-serif;
+}
+
+footer {
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #fff;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 2px;
+    border-bottom-right-radius:0px;
+    border-bottom-left-radius: 0px;
+    box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 响应式设计 */
+@media (max-width: 950px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar, .aside {
+        width: 100%;
+    }
+
+    .main {
+        margin: 10px 0;
+    }
+}
