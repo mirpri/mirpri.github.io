@@ -160,11 +160,28 @@ nav a {
     padding: 5px 10px; /* 添加内边距 */
     flex-grow: 1; /* 允许链接扩展以填满可用空间 */
     flex-basis: 0; /* 设置链接的初始大小为0，以便flex-grow可以正确工作 */
+    white-space: nowrap;
 }
 
 nav a:hover {
     background-color: #ddd;
     box-shadow: none;
+}
+
+@media (max-width: 450px) {
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+        background-color: rgba(255,255,255,0.5);
+    }
+    nav a {
+        width: 100%;
+        padding: 0px;
+        box-shadow: none;
+    }
+    nav a:hover {
+        background-color: #fff;
+    }
 }
 
 
