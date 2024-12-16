@@ -1,0 +1,191 @@
+/* 样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background: linear-gradient(90deg, #ff9a9e, #fad0c4, #c3b4e5, #fbc2eb, #ff9a9e, #fad0c4);
+    background-size: 500% 200%;
+    animation: gradientAnimation 15s linear infinite;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+header {
+    padding: 10px;
+    color: #fff;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2{
+    margin-top: 10px;
+}
+h3{
+    margin-top: 10px;
+}
+/* 容器 */
+.container {
+    display: flex;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+p{
+    margin-bottom: 5px;
+}
+/* 圣杯布局 */
+.sidebar {
+    width: 240px;
+    background-color: #eee;
+    padding: 15px;
+    flex-shrink: 0;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.main {
+    flex: 1;
+    background-color: #fff;
+    padding: 15px;
+    margin: 0 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.aside {
+    width: 240px;
+    background-color: #eee;
+    padding: 15px;
+    flex-shrink: 0;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+a{
+    text-decoration: none;
+    font-family: 'Consolas', 'Monaco', 'Menlo', 'DejaVu Sans Mono', 'Courier New', 'Lucida Console';
+    color: #ffffff;
+    font-weight: bold;
+    background-color: #e46623;
+    padding-left: 5px;
+    padding-right: 5px;
+    transition: 0.5s;
+}
+
+button{
+    border: #e46623 2px solid;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    background-color: #ffffff;
+    padding: 8px;
+    margin: 5px;
+    transition: 0.5s;
+}
+
+a:hover{
+    background-color: #8a23e4;
+    box-shadow: rgb(138, 35, 228,0.5) 0px 0px 10px 0px;
+}
+button:hover{
+    border: #8a23e4 2px solid;
+    box-shadow: rgb(138, 35, 228,0.5) 0px 0px 10px 0px; 
+}
+
+footer {
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #fff;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 2px;
+    border-bottom-right-radius:0px;
+    border-bottom-left-radius: 0px;
+    box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 响应式设计 */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        max-width: 550px;
+        margin: auto;
+    }
+    .sidebar, .aside {
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
+    }
+    .main {
+        margin: 10px 0;
+    }
+}
+
+.navtop{
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+nav {
+    background-color: white; /* 设置背景色为白色 */
+    border-radius: 10px; /* 设置圆角半径为10px */
+    display: flex; /* 启用Flexbox布局 */
+    justify-content: space-between; /* 链接之间平均分布空间 */
+    align-items: center; /* 垂直居中链接 */
+    padding: 5px; /* 添加内边距 */
+    margin: auto;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 1160px;
+}
+nav a {
+    color: black; /* 设置链接文字颜色 */
+    background-color: transparent;
+    flex: 1; /* 使链接能够平均分配空间，如果需要的话 */
+    text-align: center; /* 链接文本居中 */
+    padding: 5px 10px; /* 添加内边距 */
+    flex-grow: 1; /* 允许链接扩展以填满可用空间 */
+    flex-basis: 0; /* 设置链接的初始大小为0，以便flex-grow可以正确工作 */
+}
+
+nav a:hover {
+    background-color: #ddd;
+    box-shadow: none;
+}
+
+
+.photo-container {
+    margin: 10px 20px; /* 左右边距20px */
+    border-radius: 10px; /* 四周圆角 */
+    
+}
+  
+.photo-container img {
+    width: fit-content; /* 图片宽度占满容器 */
+    margin: auto;
+    height: auto; /* 图片高度自适应 */
+    border-radius: 10px; /* 图片四周圆角 */
+    height: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+    object-fit: contain;
+}
+
+.photo-container img:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+}
+
