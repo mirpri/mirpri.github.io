@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Insights</title>
+    <link href="res/saintyle.css" rel="stylesheet" type="text/css">
+    <style>        
+        section{
+            margin: auto;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        #modal {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.1s ease-in-out;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 500px;
+            max-height: 80%;
+            overflow: auto;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center; margin-top: 20px;">Learning Insights</h1>
+        <br>
+    </header>
+    <div class="navtop">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="gallery.html">My Gallery</a>
+            <a href="works.html">My Works</a>
+            <a href="learning.html">📓Learning Notes</a>
+            <a href="strand.html">Mini Games</a>        
+        </nav>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Learning Insights</h2>
+            <ul>
+                <li>Code Learning Notes</li>
+                <li>Web Development Insights</li>
+            </ul>
+        </div>
+        <div class="main">
+            <section>
+            <h2>Code Learning Notes</h2>
+            View my study notes! <a href="https://mirpri.github.io/coding-notes/site/" target="_blank">↗️Open</a>
+            </section>
+            <br>
+            <section>
+            <h2>Web Development Insights</h2>
+            <p>Learning web design is a journey full of challenges and fun. During this process, I deeply realized that daring to imagine and trying bravely are the keys to improving skills and perfecting works.</p>
+
+            <h3>Inspiration is the Starting Point of Design</h3>
+            <p>Every web design starts with a new idea. I often ask myself: "What if I design the navigation bar as floating?" "Can the page turn like a book?" These bold ideas became my motivation to explore web design. Even if I don't know how to achieve it at first, I won't limit my imagination.</p>
+
+            <h3>The Creation Process from Scratch</h3>
+            <p>Once I have an idea, I immediately start trying. The code I write at the beginning may be rough, and the page may not be satisfactory, but every attempt brings new gains. When a floating navigation bar successfully appears on the screen, or an interactive animation runs smoothly, the sense of accomplishment motivates me to challenge new goals.</p>
+
+            <h3>Gradual Improvement: From Trying to Refinement</h3>
+            <p>Web design is a continuous optimization process. I find problems in each attempt and keep adjusting. For example, a dynamic effect may look stiff at first, but by modifying parameters or adding transition effects, it can become smoother. Through such small improvements, my web pages gradually become more refined from simple to complex, from rough to exquisite.</p>
+
+            <h3>AI Assistance: Becoming My Design Partner</h3>
+            <p>Throughout the process, AI played an important role. Whenever I encounter difficulties, AI can always provide timely help, from basic code to solving complex logic problems. Its guidance saved me a lot of detours. Moreover, AI inspired me with many new ideas, such as how to achieve subtle gradient effects with CSS or add interactive functions with JavaScript. This companion-like support keeps my enthusiasm for design high.</p>
+            <a href="https://chat.openai.com">ChatGPT</a>
+            <a href="https://gemini.google.com">Gemini</a>
+            <a href="https://copilot.microsoft.com/">Copilot</a>
+            <a href="https://copilot.github.com/">GitHub Copilot</a><br>
+
+            <h3>Conclusion</h3>
+            <p>By daring to think and try, my web pages have grown from simple layouts to works full of personality and functionality. This experience made me realize that the charm of design lies in continuous attempts and progress, and the companionship of AI adds more possibilities to this journey. In the future, I look forward to creating more wonderful web pages with this exploratory spirit and AI support.</p>
+            <button id="show-modal">📃Technical Summary of This Site</button>
+            </section>
+            <br>
+            <script src="https://giscus.app/client.js"
+                    data-repo="Mirpri/mirpri.github.io"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkzOTg3NDcyNTY="
+                    data-category="General"
+                    data-category-id="DIC_kwDOF8RmeM4ClRN5"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+        
+    </div>
+    <br>
+
+    <div id="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h1 style="text-align: center;">Technical Summary</h1>
+            <h2>Holy Grail Layout</h2>
+                <p>When the page is wide enough, the homepage is a three-column layout, with the main content in the middle and sidebars on both sides, implemented using flex layout.</p>
+            <h2>Responsive Layout</h2>
+                <p>When the page width is small, the various parts of the webpage are arranged in columns, implemented using media queries. This better adapts to different screen sizes and provides a better experience on mobile devices.</p>
+            <h2>Dynamic Background</h2>
+                <p>Using the animation property to achieve a constantly changing gradient background, beautiful and magnificent.</p>
+            <h2>Various CSS Styles</h2>
+                <p>Including fonts, colors, borders, shadows, margins, rounded corners, transparency, etc. As you can see, these styles make my webpage more beautiful and refined.</p>
+            <h2>Giscus Discussion Area</h2>
+                <p>Implemented using Giscus discussion area + GitHub discussions, enabling interaction with users on a static page.</p>
+            <h2>Simple Games with H5</h2>
+                <p>Originating from the mini-games I previously published on GitHub. It includes both front-end implementation and back-end calculations. Here, its style has been modified to fit the page style.</p>
+        </div>
+    </div>
+</body>
+
+<script>
+    const showModalButton = document.getElementById('show-modal');
+    const modal = document.getElementById('modal');
+    const closeButton = document.querySelector('.close');
+
+    showModalButton.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    });
+
+    closeButton.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+</script>
+</html>

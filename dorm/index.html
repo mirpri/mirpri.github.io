@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>东十410寝室主页</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        setTimeout(function() {
+            window.location.href = "https://d10-410.github.io/";
+        }, 3000);
+    </script>
+</head>
+<body>
+    <div class="notification">
+        <p>⚠️ 本网站已迁移到新网址，此页内容不再更新：<a href="https://d10-410.github.io/">https://d10-410.github.io/</a></p>
+        <p>页面将在 <span id="countdown">3</span> 秒后跳转...</p>
+    </div>
+    <script>
+        var countdownElement = document.getElementById('countdown');
+        var countdown = 3;
+        setInterval(function() {
+            countdown--;
+            if (countdown >= 0) {
+                countdownElement.textContent = countdown;
+            }
+        }, 1000);
+    </script>
+    <div class="container" id="home">
+        <h1>欢迎来到东十410</h1>
+        <nav class="navbar">
+            <div class="nav-item"><a href="#home">主页</a></div>
+            <div class="nav-item"><a href="#profiles">成员介绍</a></div>
+            <div class="nav-item"><a href="#news">寝室新闻</a></div>
+            <div class="nav-item"><a href="#about">关于本页</a></div>
+        </nav>
+        <div class="profile-card" id="profiles">
+            <div class="profile">
+                <img src="res/lgh.jpg" alt="头像" class="avatar">
+                <h2 class="roommate-name">李冠衡</h2>
+                <h2 class="githubname">@LiGuanheng</h2>
+                <a class="highlightlink" href="https://liguanheng.github.io/" target="_blank" class="name">🔗访问他的主页</a>
+            </div>
+            <div class="profile">
+                <img src="res/lsz.jpg" alt="头像" class="avatar">
+                <h2 class="roommate-name">刘士卓</h2>
+                <h2 class="githubname">@Mirpri</h2>
+                <a class="highlightlink" href="https://mirpri.github.io/my-intro/" target="_blank" class="name">🔗访问他的主页</a>
+            </div>
+            <div class="profile">
+                <img src="res/xyy.jpg" alt="头像" class="avatar">
+                <h2 class="roommate-name">徐越扬</h2>
+                <h2 class="githubname">@TSCP6</h2>
+                <a class="highlightlink" href="https://tscp6.github.io/" target="_blank" class="name">🔗访问他的主页</a>
+            </div>
+            <div class="profile">
+                <img src="res/lwg.jpg" alt="头像" class="avatar">
+                <h2 class="roommate-name">刘韦国</h2>
+                <h2 class="githubname">@Hanser-QwQ</h2>
+                <a class="highlightlink" href="https://hanser-qwq.github.io/" target="_blank" class="name">🔗访问他的主页</a>
+            </div>
+        </div>
+        <div class="news-board" id="news">
+            <h2>寝室新闻</h2>
+            <ul class="news-list">
+                <li class="news-item">
+                    <h3>东十410寝室主页上线了！</h3>
+                    <p>2024年11月23日，东十410寝室主页正式上线！届时，可通过mirpri.github.io/my-intro/dorm访问寝室主页，了解我们寝室的成员与文化。</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <footer id="about">
+        <div class="container">
+        <h2>关于本页</h2>
+        <p>东十410寝室主页是为了展示我们寝室成员和寝室文化而创建的。我们的寝室位于东十舍的410房间，是一个充满活力和友谊的地方。我们不仅在学业上互相帮助，还在生活中彼此支持，共同度过大学时光。感谢你访问我们的寝室主页，希望你能喜欢这里的内容，并从中获得一些启发和乐趣。</p>
+        <p>寝室主页由刘士卓制作，个人主页由刘士卓、李冠衡、徐越扬、刘韦国提供。</p>
+        <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>&nbsp;&nbsp;
+        <span id="busuanzi_container_site_uv">
+            本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </span>
+    </div>
+</footer>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
+</html>

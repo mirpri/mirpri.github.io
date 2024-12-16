@@ -1,119 +1,161 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mir Pri Me</title>
+    <title>Personal Introduction</title>
     <link href="res/saintyle.css" rel="stylesheet" type="text/css">
+    <style>
+        #modal {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.1s ease-in-out;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 500px;
+            max-height: 80%;
+            overflow: auto;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
     <header>
-        <h1 style="text-align: center; margin-top: 20px;">Mir Pri Me</h1>
+        <h1 style="text-align: center; margin-top: 20px;">My Homepage</h1>
+        <br>
     </header>
-
+    <div class="navtop">
+        <nav>
+            <a href="index.html">🏠Home</a>
+            <a href="gallery.html">My Gallery</a>
+            <a href="works.html">My Works</a>
+            <a href="learning.html">Learning Notes</a>
+            <a href="strand.html">Mini Games</a>
+        </nav>
+    </div>
     <div class="container">
-        <!-- 左侧栏 -->
-        <div class="sidebar">
-            <h2>About Me</h2>
-            <img src="res/title.png" width="100px">
-            <ul>
-                <li>Mirpri</li>
-                <li>Follow me on <a class="aOnSides" href="https://github.com/mirpri">GitHub</a> !</li>
-            </ul>
-
+        <!-- Left Sidebar -->
+        <div style="display: flex; flex-wrap: wrap;" class="sidebar">
+            <div style="min-width: 200px; margin: 0 auto;">
+                <h2>My Avatar</h2>
+                <div style="margin: auto; text-align: center;"><img src="res/title.png" width="100px"></div>
+                <ul>
+                    <li>Name: Mirpri</li>
+                    <li>ID: Mirpri</li>
+                </ul>
+            </div>
         </div>
 
-        <!-- 中间内容 -->
+        <!-- Main Content -->
         <div class="main">
-            <h2>Created by Mirpri</h2>
-
-            <section>
-                <h3>Watth</h3>
-                <p>Watth is an innovative tool designed to help you effortlessly divide numbers. Whether you're working
-                    on complex mathematical problems or just need a quick solution, this tool makes it easy to perform
-                    precise divisions with a simple interface.</p>
-                <p>For a detailed overview and to explore the source code, visit the project’s page on <a
-                        href="https://github.com/Mirpri/watth" target="_blank">GitHub</a>.</p>
-            </section>
-
-            <section>
-                <h3>Function Grapher</h3>
-                <p>Function Grapher is a powerful tool that allows you to draw and visualize mathematical functions.
-                    Whether you're a student learning math or a professional needing to analyze equations, this tool
-                    provides a clear graphical representation of functions, making it easier to understand their
-                    behavior.</p>
-                <p>Find more detailed information about the tool, including usage instructions and code, on its <a
-                        href="https://github.com/Mirpri/function-grapher" target="_blank">GitHub</a> page.</p>
-            </section>
-
-            <section>
-                <h3>Roads</h3>
-                <p>Roads is a strategy game where you manage traffic flow and plan the most efficient routes, drawing
-                    inspiration from the famous game Mini Metro (R). Test your planning skills and challenge yourself
-                    with increasingly complex city layouts, optimizing your traffic system to keep everything running
-                    smoothly.</p>
-                <p>For more about the game mechanics, updates, and development details, visit the <a
-                        href="https://github.com/Mirpri/Roads" target="_blank">GitHub repository</a>.</p>
-            </section>
-
-            <section>
-                <h3>Pong-N</h3>
-                <p>Pong-N is a modern twist on the classic arcade game Pong. With updated visuals and smoother gameplay,
-                    this version takes the traditional concept and elevates it to a new level. Challenge your reflexes
-                    and see how far you can go in this timeless game with a fresh perspective.</p>
-                <p>For a detailed overview of the game, including features and enhancements, visit the project on <a
-                        href="https://github.com/Mirpri/Pong-N" target="_blank">GitHub</a>, or download the latest
-                    release from <a href="https://github.com/Mirpri/Pong-N/release" target="_blank">here</a>.</p>
-            </section>
-
-            <section>
-                <h3>Timer</h3>
-                <p>Timer is a straightforward yet efficient online countdown timer designed to help you keep track of
-                    time for various activities. Whether you’re timing a cooking session, a workout, or a timed exam,
-                    this tool ensures you stay on track with ease. Its user-friendly interface allows for quick setup
-                    and accurate timing.</p>
-                <p>To start using the timer right away, click on the following link to launch it: <a
-                        href="https://mirpri.github.io/timer.html" target="_blank">Launch Timer</a>.</p>
-            </section>
-
-            <section>
-                <h3>Word Strand</h3>
-                <p>Word Strand is a fun and challenging word puzzle game that tests your vocabulary and problem-solving
-                    skills. Link words together in a strand and solve puzzles to unlock new levels. It’s a great way to
-                    relax and engage your brain while expanding your lexicon.</p>
-                <p>Start playing now and immerse yourself in this addictive word game by clicking on <a
-                        href="https://mirpri.github.io/wordstrands" target="_blank">here</a>.</p>
-            </section>
-
-            <section>
-                <h3>C Language Learning Notes</h3>
-                <p>This document is a collection of my personal notes and observations as I dive into learning the C
-                    programming language. As I continue to study and experiment with C, I record newly discovered
-                    features, tips, and techniques that I find particularly useful. Whether you're a beginner or looking
-                    to refine your C skills, these notes might offer some valuable insights.</p>
-                    <p>To explore my ongoing C learning journey, access the full notes <a href="https://elegant-pulsar-e83.notion.site/Try-something-in-C-11f37c57fc4b803d8d0bffa5cb8513da?pvs=4" target="_blank">here</a>.</p>
-                </section>
-
+            <h2>About this site</h2>
+            <p>This is a personal homepage created by Mirpri. It is a place where I share my works, learning insights, and other information. I hope you can find something interesting here. Also, it hosts pages for my specific purposes in sub-pages.</p>
+            <p>On my homepage, you can find my works, learning insights, colorful gallery, mini games, and other information. If you have any questions or suggestions, please feel free to contact me.</p>
+            <h2>Personal Introduction</h2>
+            <p>I am a student majoring in Computer Science and Technology at HUST. During my university years, I have continuously studied and explored, accumulating a solid theoretical foundation and rich practical experience. Through participating in various courses and projects, I have developed a strong interest in computer science, especially in the fields of artificial intelligence and big data.
+            </p>
+            <p>In the process of learning, I emphasize the combination of theory and practice, actively participating in various programming competitions and research projects. These experiences have not only enhanced my programming skills and problem-solving abilities but also cultivated my independent thinking, teamwork, and innovation awareness. Through continuous learning and practice, I have mastered multiple skills such as C++ and Python. At the same time, I keep a close eye on the latest technologies in the field of computer science and continuously improve my professional qualities through self-study and practice.
+            </p>
+            <h2>Welcome to Contact Me</h2>
+            <p>
+                Email: <a href="mailto:6shizhuo@gmail.com">6shizhuo@gmail.com</a><br>
+                <br>
+            </p>
         </div>
-        <!-- 右侧栏 -->
+        <!-- Right Sidebar -->
         <div class="aside">
-            <h2>Contact Me</h2>
+            <h2>Hobbies</h2>
             <ul>
-                <li>Email: <a class="aOnSides" href="mailto:6shizhuo@gmail.com">6shizhuo@gmail.com</a></li>
+                <li>Programming</li>
+                <li>Reading</li>
+                <li>Sports</li>
             </ul>
-            <h2>Explore more</h2>
+            <h2>Explore More</h2>
             <ul>
-                <li>GitHub: <a class="aOnSides" href="https://github.com/mirpri">github.com/mirpri</a></li>
-                <li>My works: <a class="aOnSides" href="https://mirpri.github.io/">mirpri.github.io</a></li>
+                <li>GitHub: <a href="https://github.com/mirpri">github.com/mirpri</a></li>
+                <li>My Works: <a href="https://mirpri.github.io/works">mirpri.github.io/works</a></li>
             </ul>
+
+            <br>
+            
+            <button id="show-modal">💬Leave a Message!</button>
+            
+            
         </div>
     </div>
+    <br>
     <footer>
         An introduction to myself.
     </footer>
-    <br><br><br>
+
+    <div id="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h1 style="text-align: center;">Leave a Message and Discuss</h1>
+            <script src="https://giscus.app/client.js"
+                    data-repo="Mirpri/mirpri.github.io"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkzOTg3NDcyNTY="
+                    data-category="General"
+                    data-category-id="DIC_kwDOF8RmeM4ClRN5"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+    </div>
 </body>
+
+<script>
+    const showModalButton = document.getElementById('show-modal');
+    const modal = document.getElementById('modal');
+    const closeButton = document.querySelector('.close');
+
+    showModalButton.addEventListener('click', () => {
+        modal.style.display = 'flex';
+        document.querySelector('footer').style.display = 'none';
+    });
+
+    closeButton.addEventListener('click', () => {
+        modal.style.display = 'none';
+        document.querySelector('footer').style.display = 'block';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            document.querySelector('footer').style.display = 'block';
+        }
+    });
+</script>
 
 </html>

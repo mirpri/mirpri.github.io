@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Game</title>
+    <link href="res/saintyle.css" rel="stylesheet" type="text/css">
+    <script src="res/wordlists.js"></script>
+    <script src="res/script.js"></script>
+
+    <style>
+        /* Main layout */
+
+        /* Main content area */
+        .main-content {
+            width: 100%; /* Main content area takes full width */
+            padding: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            /* width: 100%; */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        td {
+            padding: 2px;
+        }
+
+        input,
+        button {
+            padding: 10px;
+            border: 0px;
+            border-radius: 5px;
+            background-color: #eee;
+            margin:auto;
+            color: black;
+        }
+
+        button:hover {
+            background-color: beige;
+            border: 0px;
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px 0px;
+        }
+
+        .main {
+            text-align: center;
+        }
+
+        .button-table {
+            width: 40px;
+            height: 40px;
+            border: 0px;
+            border-radius: 10px;
+            background-color: #eee;
+            /* font-weight: bold; */
+            font-family:Arial, Helvetica, sans-serif;
+            font-size: 16px;
+        }
+
+        .button-table:hover {
+            background-color: burlywood !important;
+        }
+
+        .bordered {
+            border-radius: 10px;
+            margin: auto;
+            padding: 8px;
+            width: fit-content;
+            display: none;
+        }
+        .progress-container {
+            width: 80%;
+            height: 50px;
+            margin: auto; /* Add this line */
+            text-align: center;
+            background-color: #e8e8e8;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .progress-text {
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center; margin-top: 20px;">Mini Game</h1>
+        <br>
+    </header>
+    <div class="navtop">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="gallery.html">My Gallery</a>
+            <a href="works.html">My Works</a>
+            <a href="learning.html">Learning Notes</a>
+            <a href="strand.html">🕹️Mini Game</a>        
+        </nav>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Word Strand</h2>
+            <p>The game presents a grid of letters. Your goal is to find valid words from this grid of letters.</p>
+            <p>These words must be adjacent in the grid. Words must contain at least four letters and be in the answer list.</p>
+            <p>For every 3 correct but unlisted words found, you get a hint opportunity.</p>
+            <p>Find all valid words to complete the game.</p>
+        </div>
+        <div class="main">
+            <h1>Word Strands</h1>
+                <!-- Main content area -->
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-bar" ></div>
+                    <div class="progress-text">Loading...</div>
+                </div>
+                <div class="main-content">
+                    <div id="start-div" style="display: none;">
+                        <button style="height: 50px; width: 80%;margin-bottom: 10px;" onclick="initPuzzle('H')"> Easy </button>
+                        <button style="height: 50px; width: 80%;" onclick="initPuzzle('T')"> Hard </button>
+                    </div>
+                    <div id="input-div" style="display: none;min-width: 390px;">
+                        <input disabled id="input1">
+                        <button onclick="submitWord()">submit</button>
+                        <button onclick="clearSelection()">clear</button>
+                        <button onclick="requestHint()">hint</button>
+                    </div>
+                    <br>
+                    <div><table id="buttonTable"></table></div>
+                </div>         
+        </div>
+        <div class="aside">
+            <!-- Right sidebar -->
+            <div id="word-display">
+                <p id="info-p" style="font-weight: bold;">Ready</p>
+
+                <p id="found-words"style="background-color: #cbffcb; padding: 8px; margin: 6px">Accepted: </p>
+
+                <p id="unaccepted-words" style="background-color: #ffdce2; padding: 8px; margin: 6px">Unaccepted: </p>
+            </div>
+        </div>
+        
+    </div>
+    <br>
+    <footer>
+        (c) 2024 Mirpri
+    </footer>
+</body>
+
+<script>
+    const progressBar = document.querySelector('.progress-bar');
+    const progressText = document.querySelector('.progress-text');
+    
+    let progress = -20;
+    
+    function updateProgress() {
+      progress += 20;
+      progressBar.style.width = `${progress}%`;
+      progressText.textContent = `Loading... ${progress}%`;
+    
+      if (progress >= 100) {
+        // Simulate loading completion
+        setTimeout(() => {
+          // Navigate to the next page
+          document.getElementById("progress-container").style.display="none";
+          document.getElementById("start-div").style.display = "block";
+        }, 1000);
+      } else {
+        setTimeout(updateProgress, 500);
+      }
+    }
+    
+    updateProgress();
+</script>
+</html>
