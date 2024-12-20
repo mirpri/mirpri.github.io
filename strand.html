@@ -15,6 +15,7 @@
         .main-content {
             width: 100%; /* Main content area takes full width */
             padding: 20px;
+            overflow-x: auto;
         }
 
         table {
@@ -73,7 +74,7 @@
         .progress-container {
             width: 80%;
             height: 50px;
-            margin: auto; /* Add this line */
+            margin: auto;
             text-align: center;
             background-color: #e8e8e8;
             border-radius: 10px;
@@ -91,6 +92,23 @@
             font-size: 16px;
             color: #333;
         }
+
+        @media (max-width: 1000px) {
+            .container {
+                flex-direction: column;
+                max-width: 550px;
+                margin: auto;
+            }
+            .sidebar, .aside {
+                width: 100%;
+                max-width: 600px;
+                margin: auto;
+            }
+            .main {
+                margin: 10px 0;
+            }
+        }
+        
     </style>
 </head>
 
@@ -140,7 +158,7 @@
                         <button style="height: 50px; width: 80%;margin-bottom: 10px;" onclick="initPuzzle('H')"> Easy </button>
                         <button style="height: 50px; width: 80%;" onclick="initPuzzle('T')"> Hard </button>
                     </div>
-                    <div id="input-div" style="display: none;min-width: 390px;">
+                    <div id="input-div" style="display: none; min-width: 385px">
                         <input disabled id="input1">
                         <button onclick="submitWord()">submit</button>
                         <button onclick="clearSelection()">clear</button>
@@ -164,7 +182,7 @@
     </div>
     <br>
     <footer>
-        (c) 2024 Mirpri
+        © 2024 Mirpri
     </footer>
 </body>
 
