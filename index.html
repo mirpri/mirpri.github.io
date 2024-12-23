@@ -40,6 +40,13 @@
             font-size: 24px;
             cursor: pointer;
         }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: flex;
+                flex-wrap: wrap;
+            }
+        }
     </style>
 </head>
 
@@ -71,15 +78,15 @@
     </div>
     <div class="container">
         <!-- Left Sidebar -->
-        <div style="display: flex; flex-wrap: wrap;" class="sidebar">
-            <div style="min-width: 200px; margin: 0 auto;">
+        <div  class="sidebar">
+            <div>
                 <h2>My Avatar</h2>
-                <div style="margin: auto; text-align: center;"><img src="res/title.png" width="100px"></div>
                 <ul>
                     <li>Name: Mirpri</li>
                     <li>ID: Mirpri</li>
                 </ul>
             </div>
+            <div style="margin: 20px auto; text-align: center;"><img src="res/title.png" width="100px"></div>
         </div>
 
         <!-- Main Content -->
