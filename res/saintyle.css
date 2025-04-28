@@ -207,10 +207,12 @@ nav a:hover {
     .navtop {
         margin-left: 0px;
         margin-right: 0px;
+        padding-left: 5px;
+        padding-right: 5px;
     }
     .container{
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 }
 
