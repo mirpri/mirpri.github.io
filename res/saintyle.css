@@ -10,10 +10,12 @@
     0% {
         background-position: 0% 50%;
     }
+
     100% {
         background-position: 100% 50%;
     }
 }
+
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -34,12 +36,14 @@ header {
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-h2{
+h2 {
     margin-top: 10px;
 }
-h3{
+
+h3 {
     margin-top: 10px;
 }
+
 /* 容器 */
 .container {
     display: flex;
@@ -47,9 +51,11 @@ h3{
     max-width: 1200px;
     margin: 0 auto;
 }
-p{
+
+p {
     margin-bottom: 5px;
 }
+
 /* 圣杯布局 */
 .sidebar {
     width: 240px;
@@ -76,7 +82,7 @@ p{
 }
 
 
-a{
+a {
     text-decoration: none;
     font-family: 'Consolas', 'Monaco', 'Menlo', 'DejaVu Sans Mono', 'Courier New', 'Lucida Console';
     color: #ffffff;
@@ -87,7 +93,7 @@ a{
     transition: 0.5s;
 }
 
-button{
+button {
     border: #e46623 2px solid;
     color: rgb(0, 0, 0);
     font-weight: bold;
@@ -97,13 +103,14 @@ button{
     transition: 0.5s;
 }
 
-a:hover{
+a:hover {
     background-color: #8a23e4;
-    box-shadow: rgb(138, 35, 228,0.5) 0px 0px 10px 0px;
+    box-shadow: rgb(138, 35, 228, 0.5) 0px 0px 10px 0px;
 }
-button:hover{
+
+button:hover {
     border: #8a23e4 2px solid;
-    box-shadow: rgb(138, 35, 228,0.5) 0px 0px 10px 0px; 
+    box-shadow: rgb(138, 35, 228, 0.5) 0px 0px 10px 0px;
 }
 
 footer {
@@ -112,7 +119,7 @@ footer {
     bottom: 0;
     width: 100%;
     background-color: rgba(255, 255, 255, 0.3);
-    font-weight:600;
+    font-weight: 600;
     color: #484848;
     padding: 5px;
     border-radius: 0;
@@ -121,7 +128,7 @@ footer {
 
 
 
-.navtop{
+.navtop {
     position: sticky;
     position: -webkit-sticky;
     top: 0;
@@ -130,29 +137,31 @@ footer {
 }
 
 nav {
-    background-color: white; /* 设置背景色为白色 */
-    border-radius: 10px; /* 设置圆角半径为10px */
-    display: flex; /* 启用Flexbox布局 */
-    justify-content: space-between; /* 链接之间平均分布空间 */
-    align-items: center; /* 垂直居中链接 */
-    padding: 5px; /* 添加内边距 */
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
     margin: auto;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff80;
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 4px 10px #00000033;
     max-width: 1180px;
 }
+
 nav a {
-    color: black; /* 设置链接文字颜色 */
+    color: black;
     background-color: transparent;
-    flex: 1; /* 使链接能够平均分配空间，如果需要的话 */
-    text-align: center; /* 链接文本居中 */
-    padding: 5px 10px; /* 添加内边距 */
-    flex-grow: 1; /* 允许链接扩展以填满可用空间 */
-    flex-basis: 0; /* 设置链接的初始大小为0，以便flex-grow可以正确工作 */
+    flex: 1;
+    text-align: center;
+    padding: 5px 10px;
+    flex-grow: 1;
+    flex-basis: 0;
     white-space: nowrap;
 }
 
 nav a:hover {
-    background-color: #ddd;
+    background-color: #fff;
     box-shadow: none;
 }
 
@@ -163,14 +172,18 @@ nav a:hover {
         max-width: 550px;
         margin: auto;
     }
-    .sidebar, .aside {
+
+    .sidebar,
+    .aside {
         width: 100%;
         max-width: 600px;
         margin: auto;
     }
+
     .main {
         margin: 10px 0;
     }
+
     nav {
         max-width: 540px;
     }
@@ -189,28 +202,24 @@ nav a:hover {
 @media (max-width: 450px) {
     nav {
         align-items: flex-start;
-        background-color: #ffffff80;
         overflow-x: scroll;
         overflow-y: hidden;
-        position: relative; /* Change to relative since the parent is now sticky */
-        backdrop-filter: blur(10px);
-        box-shadow: 0px 4px 10px #00000033;
     }
+
     nav a {
         width: 100%;
         padding: 3px 10px;
         box-shadow: none;
     }
-    nav a:hover {
-        background-color: #fff;
-    }
+
     .navtop {
         margin-left: 0px;
         margin-right: 0px;
         padding-left: 5px;
         padding-right: 5px;
     }
-    .container{
+
+    .container {
         padding-left: 10px;
         padding-right: 10px;
     }
@@ -218,18 +227,24 @@ nav a:hover {
 
 
 .photo-container {
-    margin: 10px 20px; /* 左右边距20px */
-    border-radius: 10px; /* 四周圆角 */
-    
+    margin: 10px 20px;
+    /* 左右边距20px */
+    border-radius: 10px;
+    /* 四周圆角 */
+
 }
-  
+
 .photo-container img {
-    width: fit-content; /* 图片宽度占满容器 */
+    width: fit-content;
+    /* 图片宽度占满容器 */
     margin: auto;
-    height: auto; /* 图片高度自适应 */
-    border-radius: 10px; /* 图片四周圆角 */
+    height: auto;
+    /* 图片高度自适应 */
+    border-radius: 10px;
+    /* 图片四周圆角 */
     height: 300px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* 阴影效果 */
     object-fit: contain;
 }
 
@@ -237,4 +252,3 @@ nav a:hover {
     transform: scale(1.1);
     transition: transform 0.3s ease-in-out;
 }
-
