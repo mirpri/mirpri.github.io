@@ -1,0 +1,5 @@
+{
+  "name": "Mirpri Portfolio",
+  "description": "A developer portfolio styled after the LazyVim Neovim configuration, featuring keyboard navigation, file system browsing, and an AI chat interface.",
+  "requestFramePermissions": []
+}
