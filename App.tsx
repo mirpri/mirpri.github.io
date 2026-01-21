@@ -4,20 +4,43 @@ import Dashboard from './components/Dashboard';
 import Editor from './components/Editor';
 import StatusLine from './components/StatusLine';
 import FileExplorer from './components/FileExplorer';
-import { X, Home, FileCode } from 'lucide-react';
+import { X, Home, FileCode, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
 import { Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { buildExplorerTree, getMarkdownPages, loadMarkdownContent } from './services/pagesService';
+import { useEditorStore } from './store';
+import { 
+  nextWord, 
+  prevWord, 
+  nextWordEnd, 
+  prevWordEnd, 
+  nextParagraph, 
+  prevParagraph, 
+  computeSelectionText, // computeSelectionText is needed
+  // ... others likely not needed if logic moved but let's see
+  firstNonWhitespace
+} from './services/vimService';
 
 const App: React.FC = () => {
-  const [mode, setMode] = useState<Mode>(Mode.NORMAL);
-  const [activeFileId, setActiveFileId] = useState<string | null>(null);
+  const { 
+    mode, 
+    setMode, 
+    activeFileId, 
+    setActiveFile, 
+    buffers, 
+    openFile, 
+    closeFile, 
+    updateBuffer,
+    updateCursor
+  } = useEditorStore();
+  
   const [files, setFiles] = useState<FileNode[]>([]);
   const [filesReady, setFilesReady] = useState(false);
-  const [buffers, setBuffers] = useState<Buffer[]>([]);
+
   const activeBuffer = useMemo(() => {
     if (!activeFileId) return null;
     return buffers.find(b => b.id === activeFileId) || null;
   }, [buffers, activeFileId]);
+
     // Initialize explorer from markdown pages plus special Chat page
     useEffect(() => {
       const extraNodes: FileNode[] = [
@@ -33,7 +56,10 @@ const App: React.FC = () => {
       setFilesReady(true);
     }, []);
 
-  const [showExplorer, setShowExplorer] = useState(true);
+  const [showExplorer, setShowExplorer] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return window.innerWidth >= 768; // visible by default on md+
+  });
   const [visualAnchor, setVisualAnchor] = useState<{ row: number; col: number } | null>(null);
   // Pending key combos (e.g., 'gg', 'ge')
   const gPendingRef = useRef(false);
@@ -73,31 +99,9 @@ const App: React.FC = () => {
      setFiles(newFiles);
   };
 
-  const updateActiveBuffer = (updater: (prev: Buffer | null) => Buffer | null) => {
-    setBuffers(prev => {
-      const idx = activeFileId ? prev.findIndex(b => b.id === activeFileId) : -1;
-      const current = idx >= 0 ? prev[idx] : null;
-      const next = updater(current);
-      if (!next) {
-        if (idx >= 0) {
-          const copy = [...prev];
-          copy.splice(idx, 1);
-          return copy;
-        }
-        return prev;
-      }
-      const copy = [...prev];
-      if (idx >= 0) {
-        copy[idx] = next;
-      } else {
-        copy.push(next);
-      }
-      return copy;
-    });
-  };
 
   const navigate = useNavigate();
-  const openFile = (id: string) => {
+  const navigateToFile = (id: string) => {
     const file = findFile(files, id);
     if (!file || file.type === 'folder') return;
     // Navigate to /pagename for markdown and special chat
@@ -108,81 +112,83 @@ const App: React.FC = () => {
     setMode(Mode.NORMAL);
     setCommandBuffer('');
     setVisualAnchor(null);
-    navigate('/');
     closeTab(activeFileId);
+    navigate('/');
   };
 
-  const closeTab = (id: string) => {
-    setBuffers(prev => prev.filter(b => b.id !== id));
-    if (activeFileId === id) {
-      setActiveFileId(null);
-      setVisualAnchor(null);
-      setMode(Mode.NORMAL);
-      navigate('/');
+  const closeTab = (id: string | null) => {
+    if (id) {
+       closeFile(id);
+       if (activeFileId === id) {
+          setVisualAnchor(null);
+          setMode(Mode.NORMAL);
+          navigate('/');
+       }
     }
   };
+  
   // Route -> Buffer sync
   const location = useLocation();
-  const params = useParams();
   useEffect(() => {
     if (!filesReady) return;
     const path = location.pathname.replace(/^\/+/, '');
     if (!path) {
-      setActiveFileId(null);
+      setActiveFile(null);
       return;
     }
     const file = findFile(files, path);
     if (!file || file.type === 'folder') {
-      setActiveFileId(null);
-      navigate('/');
+      setActiveFile(null);
+      if (path !== '') navigate('/');
       return;
     }
 
-    setActiveFileId(file.id);
-    setMode(Mode.NORMAL);
-    setCommandBuffer('');
+    // Logic to ensure buffer is open
+    // We can call openFile from store directly
+    
+    // Check if buffer is already active to avoid re-render loops or resetting cursor
+    if (activeFileId !== file.id) {
+        setActiveFile(file.id);
+        setMode(Mode.NORMAL);
+        setCommandBuffer('');
+    }
 
-    let bufferType: Buffer['type'] = 'markdown';
-    if (file.extension === 'ts' || file.extension === 'tsx') bufferType = file.id === 'chat' ? 'chat' : 'typescript';
-    if (file.extension === 'json') bufferType = 'json';
-    if (file.extension === 'md') bufferType = 'markdown';
-    if (file.id === 'chat') bufferType = 'chat';
-
-    const bufferBase: Buffer = {
-      id: file.id,
-      fileId: file.id,
-      title: file.name,
-      content: file.content || '',
-      cursorRow: 0,
-      cursorCol: 0,
-      scrollOffset: 0,
-      isDirty: false,
-      type: bufferType
-    };
-
+    // But wait, openFile checks existance. We should call it to ensure content.
+    // However, loading markdown content is async.
+    
     if (file.extension === 'md') {
       loadMarkdownContent(file.id).then(content => {
-        const resolved = content ?? '';
-        setBuffers(prev => {
-          if (prev.find(b => b.fileId === file.id)) return prev;
-          return [...prev, { ...bufferBase, content: resolved }];
-        });
+          openFile(file.id, content || '', file.name);
       });
     } else {
-      setBuffers(prev => {
-        if (prev.find(b => b.fileId === file.id)) return prev;
-        return [...prev, bufferBase];
-      });
+       openFile(file.id, file.content || '', file.name);
     }
-  }, [location.pathname, files, filesReady]);
 
+  }, [location, filesReady, files]); // Removed activeFileId to prevent loops? No, we need it if we change logic. But openFile handles check.
+  
+  // Wait, the "updateActiveBuffer" method was used heavily. 
+  // We need to replace usages of it with updateBuffer from store or similar.
+  // The original updateActiveBuffer was complex (handling array update).
+  // Our store "updateBuffer" just takes id and content. What about cursor?
+  // We need to extend store to handle cursor updates if we want to move cursor state to store completely.
+  // BUT the request was "use zustand to manage mode, selection, opened editors". 
+  // It didn't explicitly say cursor position, but usually "opened editors" implies their state.
+  // Let's assume cursor pos is part of buffer state.
+  
+  // Let's update store.ts to handle cursor updates first.
+
+// We removed updateActiveBuffer and the old useEffect.
+// Now we need to handle command execution.
 
   const executeCommand = async (cmd: string) => {
     const cleanCmd = cmd.trim();
     if (cleanCmd === 'q' || cleanCmd === 'q!' || cleanCmd === 'wq') {
       closeBuffer();
     } else if ( cleanCmd === 'qa' || cleanCmd === 'qa!'){
-      setBuffers([]);
+      // Close all buffers
+      // We need a store action for this, or just loop
+      // Simplified:
+      buffers.forEach(b => closeFile(b.id));
       navigate('/');
     } else if (cleanCmd === '%y') {
       if (activeBuffer?.content) {
@@ -260,20 +266,14 @@ const App: React.FC = () => {
               const lines = activeBuffer.content.split('\n');
               if (e.key === 'g') {
                 e.preventDefault();
-                updateActiveBuffer(prev => {
-                  if (!prev) return null;
-                  const targetRow = 0;
-                  const targetCol = Math.min(prev.cursorCol, (lines[targetRow] || '').length);
-                  return { ...prev, cursorRow: targetRow, cursorCol: targetCol };
-                });
+                if (activeBuffer) updateCursor(activeBuffer.id, 0, Math.min(activeBuffer.cursorCol, (lines[0] || '').length));
                 return;
               } else if (e.key === 'e') {
                 e.preventDefault();
-                updateActiveBuffer(prev => {
-                  if (!prev) return null;
-                  const pos = prevWordEnd(lines, prev.cursorRow, prev.cursorCol);
-                  return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-                });
+                if (activeBuffer) {
+                  const pos = nextWordEnd(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+                  updateCursor(activeBuffer.id, pos.row, pos.col);
+                }
                 return;
               }
               // fallthrough to handle this key normally
@@ -286,47 +286,30 @@ const App: React.FC = () => {
              const lines = activeBuffer.content.split('\n');
              const currentLine = lines[activeBuffer.cursorRow] || '';
 
+
              if (e.key === 'j' || e.key === 'ArrowDown') {
-                 updateActiveBuffer(prev => {
-                   if (!prev) return null;
-                   const nextRow = Math.min(lines.length - 1, prev.cursorRow + 1);
+                 if (activeBuffer) {
+                   const nextRow = Math.min(lines.length - 1, activeBuffer.cursorRow + 1);
                    const nextLineLen = lines[nextRow].length;
-                   return {
-                     ...prev, 
-                     cursorRow: nextRow,
-                     cursorCol: Math.min(prev.cursorCol, Math.max(0, nextLineLen - 1))
-                   };
-                 });
+                   updateCursor(activeBuffer.id, nextRow, Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen - 1)));
+                 }
              } else if (e.key === 'k' || e.key === 'ArrowUp') {
-                 updateActiveBuffer(prev => {
-                   if (!prev) return null;
-                   const nextRow = Math.max(0, prev.cursorRow - 1);
+                 if (activeBuffer) {
+                   const nextRow = Math.max(0, activeBuffer.cursorRow - 1);
                    const nextLineLen = lines[nextRow].length;
-                   return {
-                     ...prev, 
-                     cursorRow: nextRow,
-                     cursorCol: Math.min(prev.cursorCol, Math.max(0, nextLineLen - 1))
-                   };
-                 });
+                   updateCursor(activeBuffer.id, nextRow, Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen - 1)));
+                 }
              } else if (e.key === 'l' || e.key === 'ArrowRight') {
-                 updateActiveBuffer(prev => {
-                   if (!prev) return null;
-                   return {
-                     ...prev,
-                     cursorCol: Math.min(prev.cursorCol + 1, currentLine.length) // Allow going 1 past char for append logic if we were real vim
-                   };
-                 });
+                 if (activeBuffer) {
+                   updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.min(activeBuffer.cursorCol + 1, currentLine.length));
+                 }
              } else if (e.key === 'h' || e.key === 'ArrowLeft') {
-                 updateActiveBuffer(prev => {
-                   if (!prev) return null;
-                   return {
-                     ...prev,
-                     cursorCol: Math.max(0, prev.cursorCol - 1)
-                   };
-                 });
+                 if (activeBuffer) {
+                    updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.max(0, activeBuffer.cursorCol - 1));
+                 }
              } else if (e.key === 'v') {
                  setMode(Mode.VISUAL);
-                 setVisualAnchor({ row: activeBuffer.cursorRow, col: activeBuffer.cursorCol });
+                 if (activeBuffer) setVisualAnchor({ row: activeBuffer.cursorRow, col: activeBuffer.cursorCol });
                  e.preventDefault();
              } else if (e.key === 'g') {
                e.preventDefault();
@@ -349,56 +332,47 @@ const App: React.FC = () => {
                  }
                } else if (e.key === '0') {
                    e.preventDefault();
-                   updateActiveBuffer(prev => prev ? { ...prev, cursorCol: 0 } : prev);
+                   if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, 0);
                } else if (e.key === '$') {
                    e.preventDefault();
-                   updateActiveBuffer(prev => {
-                     if (!prev) return null;
-                     return { ...prev, cursorCol: (lines[prev.cursorRow] || '').length };
-                   });
+                   if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, (lines[activeBuffer.cursorRow] || '').length);
                } else if (e.key === 'e') {
                    e.preventDefault();
-                   updateActiveBuffer(prev => {
-                     if (!prev) return null;
-                     const pos = nextWordEnd(lines, prev.cursorRow, prev.cursorCol);
-                     return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-                   });
+                   if (activeBuffer) {
+                     const pos = nextWordEnd(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+                     updateCursor(activeBuffer.id, pos.row, pos.col);
+                   }
                } else if (e.key === 'G') {
                    e.preventDefault();
-                   updateActiveBuffer(prev => {
-                     if (!prev) return null;
+                   if (activeBuffer) {
                      const targetRow = lines.length - 1;
-                     const targetCol = Math.min(prev.cursorCol, (lines[targetRow] || '').length);
-                     return { ...prev, cursorRow: targetRow, cursorCol: targetCol };
-                   });
+                     const targetCol = Math.min(activeBuffer.cursorCol, (lines[targetRow] || '').length);
+                     updateCursor(activeBuffer.id, targetRow, targetCol);
+                   }
              } else if (e.key === 'w') {
                  e.preventDefault();
-                   updateActiveBuffer(prev => {
-                     if (!prev) return null;
-                     const pos = nextWord(lines, prev.cursorRow, prev.cursorCol);
-                     return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-                   });
+                   if (activeBuffer) {
+                     const pos = nextWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+                     updateCursor(activeBuffer.id, pos.row, pos.col);
+                   }
              } else if (e.key === 'b') {
                  e.preventDefault();
-                   updateActiveBuffer(prev => {
-                     if (!prev) return null;
-                     const pos = prevWord(lines, prev.cursorRow, prev.cursorCol);
-                     return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-                   });
+                   if (activeBuffer) {
+                     const pos = prevWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+                     updateCursor(activeBuffer.id, pos.row, pos.col);
+                   }
              } else if (e.key === '}') {
                  e.preventDefault();
-                   updateActiveBuffer(prev => {
-                     if (!prev) return null;
-                     const pos = nextParagraph(lines, prev.cursorRow);
-                     return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-                   });
+                   if (activeBuffer) {
+                     const pos = nextParagraph(lines, activeBuffer.cursorRow);
+                     updateCursor(activeBuffer.id, pos.row, pos.col);
+                   }
              } else if (e.key === '{') {
                  e.preventDefault();
-                   updateActiveBuffer(prev => {
-                     if (!prev) return null;
-                     const pos = prevParagraph(lines, prev.cursorRow);
-                     return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-                   });
+                   if (activeBuffer) {
+                     const pos = prevParagraph(lines, activeBuffer.cursorRow);
+                     updateCursor(activeBuffer.id, pos.row, pos.col);
+                   }
              }
          }
 
@@ -407,33 +381,24 @@ const App: React.FC = () => {
              const lines = activeBuffer.content.split('\n');
              const currentLine = lines[activeBuffer.cursorRow] || '';
 
-             const moveCursor = (newRow: number, newCol: number) => {
-               updateActiveBuffer(prev => {
-                 if (!prev) return null;
-                 return { ...prev, cursorRow: newRow, cursorCol: newCol };
-               });
-             };
-
              // resolve pending 'g' combos first
              if (gPendingRef.current) {
                gPendingRef.current = false;
                if (gTimerRef.current) { clearTimeout(gTimerRef.current); gTimerRef.current = null; }
                if (e.key === 'g') {
                  e.preventDefault();
-                 updateActiveBuffer(prev => {
-                   if (!prev) return null;
+                 if (activeBuffer) {
                    const targetRow = 0;
-                   const targetCol = Math.min(prev.cursorCol, (lines[targetRow] || '').length);
-                   return { ...prev, cursorRow: targetRow, cursorCol: targetCol };
-                 });
+                   const targetCol = Math.min(activeBuffer.cursorCol, (lines[targetRow] || '').length);
+                   updateCursor(activeBuffer.id, targetRow, targetCol);
+                 }
                  return;
                } else if (e.key === 'e') {
                  e.preventDefault();
-                 updateActiveBuffer(prev => {
-                   if (!prev) return null;
-                   const pos = prevWordEnd(lines, prev.cursorRow, prev.cursorCol);
-                   return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-                 });
+                 if (activeBuffer) {
+                   const pos = prevWordEnd(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+                   updateCursor(activeBuffer.id, pos.row, pos.col);
+                 }
                  return;
                }
                // fallthrough
@@ -441,41 +406,30 @@ const App: React.FC = () => {
 
              if (e.key === 'j' || e.key === 'ArrowDown') {
                e.preventDefault();
-               updateActiveBuffer(prev => {
-                 if (!prev) return null;
-                 const nextRow = Math.min(lines.length - 1, prev.cursorRow + 1);
+               if (activeBuffer) {
+                 const nextRow = Math.min(lines.length - 1, activeBuffer.cursorRow + 1);
                  const nextLineLen = lines[nextRow].length;
-                 return {
-                   ...prev,
-                   cursorRow: nextRow,
-                   cursorCol: Math.min(prev.cursorCol, Math.max(0, nextLineLen))
-                 };
-               });
+                 updateCursor(activeBuffer.id, nextRow, Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen)));
+               }
              } else if (e.key === 'k' || e.key === 'ArrowUp') {
                e.preventDefault();
-               updateActiveBuffer(prev => {
-                 if (!prev) return null;
-                 const nextRow = Math.max(0, prev.cursorRow - 1);
+               if (activeBuffer) {
+                 const nextRow = Math.max(0, activeBuffer.cursorRow - 1);
                  const nextLineLen = lines[nextRow].length;
-                 return {
-                   ...prev,
-                   cursorRow: nextRow,
-                   cursorCol: Math.min(prev.cursorCol, Math.max(0, nextLineLen))
-                 };
-               });
+                 updateCursor(activeBuffer.id, nextRow, Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen)));
+               }
              } else if (e.key === 'l' || e.key === 'ArrowRight') {
                e.preventDefault();
-               updateActiveBuffer(prev => {
-                 if (!prev) return null;
-                 return { ...prev, cursorCol: Math.min(prev.cursorCol + 1, currentLine.length) };
-               });
+               if (activeBuffer) {
+                 updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.min(activeBuffer.cursorCol + 1, currentLine.length));
+               }
              } else if (e.key === 'h' || e.key === 'ArrowLeft') {
                e.preventDefault();
-               updateActiveBuffer(prev => {
-                 if (!prev) return null;
-                 return { ...prev, cursorCol: Math.max(0, prev.cursorCol - 1) };
-               });
+               if (activeBuffer) {
+                 updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.max(0, activeBuffer.cursorCol - 1));
+               }
              } else if (e.key === 'y') {
+
                e.preventDefault();
                // Compute selection from visualAnchor to current cursor
                if (visualAnchor) {
@@ -498,54 +452,48 @@ const App: React.FC = () => {
               gTimerRef.current = window.setTimeout(() => { gPendingRef.current = false; gTimerRef.current = null; }, 600);
             } else if (e.key === '0') {
               e.preventDefault();
-              updateActiveBuffer(prev => prev ? { ...prev, cursorCol: 0 } : prev);
+              if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, 0);
             } else if (e.key === '$') {
               e.preventDefault();
-              updateActiveBuffer(prev => prev ? { ...prev, cursorCol: (lines[prev.cursorRow] || '').length } : prev);
+              if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, (lines[activeBuffer.cursorRow] || '').length);
             } else if (e.key === 'e') {
               e.preventDefault();
-              updateActiveBuffer(prev => {
-                if (!prev) return null;
-                const pos = nextWordEnd(lines, prev.cursorRow, prev.cursorCol);
-                return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-              });
+              if (activeBuffer) {
+                const pos = nextWordEnd(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+                updateCursor(activeBuffer.id, pos.row, pos.col);
+              }
             } else if (e.key === 'G') {
               e.preventDefault();
-              updateActiveBuffer(prev => {
-                if (!prev) return null;
+              if (activeBuffer) {
                 const targetRow = lines.length - 1;
-                const targetCol = Math.min(prev.cursorCol, (lines[targetRow] || '').length);
-                return { ...prev, cursorRow: targetRow, cursorCol: targetCol };
-              });
+                const targetCol = Math.min(activeBuffer.cursorCol, (lines[targetRow] || '').length);
+                useEditorStore.getState().updateCursor(activeBuffer.id, targetRow, targetCol);
+              }
             } else if (e.key === 'w') {
               e.preventDefault();
-              updateActiveBuffer(prev => {
-                if (!prev) return null;
-                const pos = nextWord(lines, prev.cursorRow, prev.cursorCol);
-                return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-              });
+              if (activeBuffer) {
+                const pos = nextWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+                useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
+              }
             } else if (e.key === 'b') {
               e.preventDefault();
-              updateActiveBuffer(prev => {
-                if (!prev) return null;
-                const pos = prevWord(lines, prev.cursorRow, prev.cursorCol);
-                return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-              });
+              if (activeBuffer) {
+                const pos = prevWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+                useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
+              }
             } else if (e.key === '}') {
               e.preventDefault();
-              updateActiveBuffer(prev => {
-                if (!prev) return null;
-                const pos = nextParagraph(lines, prev.cursorRow);
-                return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-              });
+              if (activeBuffer) {
+                const pos = nextParagraph(lines, activeBuffer.cursorRow);
+                useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
+              }
             } else if (e.key === '{') {
               e.preventDefault();
-              updateActiveBuffer(prev => {
-                if (!prev) return null;
-                const pos = prevParagraph(lines, prev.cursorRow);
-                return { ...prev, cursorRow: pos.row, cursorCol: pos.col };
-              });
-             }
+              if (activeBuffer) {
+                const pos = prevParagraph(lines, activeBuffer.cursorRow);
+                useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
+              }
+            }
          }
       }
     };
@@ -554,156 +502,27 @@ const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleGlobalKeys);
   }, [activeFileId, mode, commandBuffer, activeBuffer]);
 
-  // Helper: compute selected text across lines given start/end positions
-  const computeSelectionText = (
-    content: string,
-    start: { row: number; col: number },
-    end: { row: number; col: number }
-  ) => {
-    const lines = content.split('\n');
-    const [sRow, sCol] = (start.row < end.row || (start.row === end.row && start.col <= end.col))
-      ? [start.row, start.col] : [end.row, end.col];
-    const [eRow, eCol] = (start.row < end.row || (start.row === end.row && start.col <= end.col))
-      ? [end.row, end.col] : [start.row, start.col];
-
-    if (sRow === eRow) {
-      return (lines[sRow] || '').slice(Math.max(0, sCol), Math.max(0, eCol));
-    }
-
-    const parts: string[] = [];
-    parts.push((lines[sRow] || '').slice(Math.max(0, sCol)));
-    for (let r = sRow + 1; r < eRow; r++) {
-      parts.push(lines[r] || '');
-    }
-    parts.push((lines[eRow] || '').slice(0, Math.max(0, eCol)));
-    return parts.join('\n');
-  };
-
   // Vim-like motion helpers
   const isWordChar = (ch: string) => /[A-Za-z0-9_]/.test(ch);
-  const firstNonWhitespace = (s: string) => {
-    for (let i = 0; i < s.length; i++) {
-      const c = s[i];
-      if (c !== ' ' && c !== '\t') return i;
-    }
-    return 0;
-  };
-
-  const nextWord = (lines: string[], row: number, col: number) => {
-    let r = row;
-    let c = col;
-    const n = lines.length;
-    if (r >= n) return { row: n - 1, col: (lines[n - 1] || '').length };
-    let line = lines[r] || '';
-    if (c >= line.length) { r++; c = 0; }
-    while (r < n) {
-      line = lines[r] || '';
-      let p = c;
-      while (p < line.length && isWordChar(line[p])) p++; // finish current word if in one
-      while (p < line.length && !isWordChar(line[p])) p++; // skip separators
-      if (p < line.length) return { row: r, col: p };
-      r++; c = 0; // go to next line
-    }
-    return { row: n - 1, col: (lines[n - 1] || '').length };
-  };
-
-  const prevWord = (lines: string[], row: number, col: number) => {
-    let r = row;
-    let c = col;
-    if (r < 0) return { row: 0, col: 0 };
-    if (r >= lines.length) r = lines.length - 1;
-    // step back one column to avoid staying on current word start
-    if (c > 0) c--; else { r--; if (r < 0) return { row: 0, col: 0 }; c = (lines[r] || '').length - 1; if (c < 0) c = 0; }
-    while (r >= 0) {
-      const line = lines[r] || '';
-      let p = Math.min(c, Math.max(0, line.length - 1));
-      while (p >= 0 && !isWordChar(line[p])) p--; // skip separators
-      if (p >= 0) {
-        while (p > 0 && isWordChar(line[p - 1])) p--; // to word start
-        return { row: r, col: Math.max(0, p) };
-      }
-      r--; if (r < 0) break; c = (lines[r] || '').length - 1;
-    }
-    return { row: 0, col: 0 };
-  };
-
-  const nextParagraph = (lines: string[], row: number) => {
-    const n = lines.length;
-    let r = Math.min(n, row + 1);
-    while (r < n && (lines[r] || '').trim() !== '') r++; // find blank line
-    while (r < n && (lines[r] || '').trim() === '') r++; // then next non-blank
-    if (r >= n) return { row: n - 1, col: (lines[n - 1] || '').length };
-    const line = lines[r] || '';
-    return { row: r, col: Math.min(line.length, firstNonWhitespace(line)) };
-  };
-
-  const prevParagraph = (lines: string[], row: number) => {
-    let r = Math.max(0, row - 1);
-    while (r >= 0 && (lines[r] || '').trim() === '') r--; // skip blanks above
-    while (r >= 0 && (lines[r] || '').trim() !== '') r--; // go to blank before paragraph
-    const target = Math.max(0, r + 1);
-    const line = lines[target] || '';
-    return { row: target, col: Math.min(line.length, firstNonWhitespace(line)) };
-  };
-
-  const nextWordEnd = (lines: string[], row: number, col: number) => {
-    let r = row;
-    let c = col;
-    const n = lines.length;
-    if (r >= n) return { row: n - 1, col: (lines[n - 1] || '').length };
-    let line = lines[r] || '';
-    // move at least one position forward if possible
-    if (c < line.length) c++; else { r++; c = 0; }
-    while (r < n) {
-      line = lines[r] || '';
-      let p = c;
-      // skip separators to start of next word
-      while (p < line.length && !isWordChar(line[p])) p++;
-      if (p < line.length) {
-        // advance to end of this word
-        while (p + 1 < line.length && isWordChar(line[p + 1])) p++;
-        return { row: r, col: p };
-      }
-      r++; c = 0;
-    }
-    return { row: n - 1, col: (lines[n - 1] || '').length };
-  };
-
-  const prevWordEnd = (lines: string[], row: number, col: number) => {
-    let r = row;
-    let c = col;
-    if (r < 0) return { row: 0, col: 0 };
-    if (r >= lines.length) r = lines.length - 1;
-    // step back one column
-    if (c > 0) c--; else { r--; if (r < 0) return { row: 0, col: 0 }; c = (lines[r] || '').length - 1; if (c < 0) c = 0; }
-    while (r >= 0) {
-      const line = lines[r] || '';
-      let p = Math.min(c, Math.max(0, line.length - 1));
-      // skip separators
-      while (p >= 0 && !isWordChar(line[p])) p--;
-      if (p >= 0) {
-        // find start of this word
-        let start = p;
-        while (start > 0 && isWordChar(line[start - 1])) start--;
-        // end is p (the last word char found)
-        return { row: r, col: p };
-      }
-      r--; if (r < 0) break; c = (lines[r] || '').length - 1;
-    }
-    return { row: 0, col: 0 };
-  };
 
   const goLineStart = (lines: string[], row: number) => ({ row, col: 0 });
   const goLineEnd = (lines: string[], row: number) => ({ row, col: (lines[row] || '').length });
+
 
   return (
     <div className="flex flex-col h-screen w-screen bg-tokyo-bg text-tokyo-fg overflow-hidden font-mono text-sm">
       
       {/* Top Bar */}
       <div className="h-9 bg-tokyo-bg_dark flex items-center border-b border-tokyo-statusline shrink-0">
-         <div className="w-16 flex justify-center items-center bg-tokyo-blue text-tokyo-bg_dark h-full font-bold cursor-pointer" onClick={closeBuffer}>
+         <div className="w-16 flex justify-center items-center bg-tokyo-blue text-tokyo-bg_dark h-full font-bold cursor-pointer" onClick={() => navigate('/')}>
             <Home size={16} />
          </div>
+         <button
+           className="h-full px-3 flex items-center border-r border-tokyo-statusline text-tokyo-comment hover:text-tokyo-fg"
+           onClick={() => setShowExplorer(prev => !prev)}
+         >
+           {showExplorer ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
+         </button>
          <div className="flex-1 h-full flex overflow-x-auto">
            {buffers.length === 0 ? (
              <div className="px-4 h-full flex items-center text-tokyo-comment italic">
@@ -734,19 +553,43 @@ const App: React.FC = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex overflow-hidden">
-        {showExplorer && (
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* Desktop explorer with slide/collapse */}
+        <div className="hidden md:block h-full overflow-hidden transition-all duration-300 ease-out" style={{ width: showExplorer ? '15rem' : '0rem' }}>
+          <div className={`h-full transition-transform duration-300 ease-out ${showExplorer ? 'translate-x-0' : '-translate-x-full'}`}>
             <FileExplorer 
+              className="w-60"
               files={files} 
-              onFileSelect={openFile} 
+              onFileSelect={navigateToFile} 
               activeFileId={activeFileId}
               toggleFolder={toggleFolder}
             />
+          </div>
+        </div>
+
+        {/* Mobile modal explorer */}
+        {showExplorer && (
+          <div className="md:hidden fixed inset-0 z-40 flex">
+            <div className="w-64 max-w-[80%] h-full bg-tokyo-bg_dark border-r border-tokyo-statusline shadow-xl">
+              <div className="flex items-center justify-between px-3 py-2 border-b border-tokyo-statusline text-tokyo-fg">
+                <span className="text-xs uppercase tracking-wide text-tokyo-comment">Explorer</span>
+                <button onClick={() => setShowExplorer(false)} className="text-tokyo-comment hover:text-tokyo-fg"><X size={14} /></button>
+              </div>
+              <FileExplorer 
+                className="w-full"
+                files={files} 
+                onFileSelect={(id) => { navigateToFile(id); setShowExplorer(false); }} 
+                activeFileId={activeFileId}
+                toggleFolder={toggleFolder}
+              />
+            </div>
+            <div className="flex-1 bg-black/40" onClick={() => setShowExplorer(false)}></div>
+          </div>
         )}
 
         <div className="flex-1 relative flex flex-col min-w-0 bg-tokyo-bg">
           <Routes>
-            <Route path="/" element={<Dashboard onNavigate={openFile} onQuit={() => window.location.href = 'about:blank'} />} />
+            <Route path="/" element={<Dashboard onNavigate={navigateToFile} onQuit={() => window.location.href = 'about:blank'} />} />
             <Route path=":page" element={activeBuffer ? (
               <Editor 
                 buffer={activeBuffer} 
@@ -754,13 +597,13 @@ const App: React.FC = () => {
                 mode={mode}
                 selection={visualAnchor ? { start: visualAnchor, end: { row: activeBuffer.cursorRow, col: activeBuffer.cursorCol } } : null}
                 onCursorChange={(row, col) => {
-                  updateActiveBuffer(prev => prev ? { ...prev, cursorRow: row, cursorCol: col } : prev);
+                  updateCursor(activeBuffer.id, row, col);
                 }}
                 onMouseSelectionChange={(start, end) => {
                   if (start && end) {
                     setMode(Mode.VISUAL);
                     setVisualAnchor(start);
-                    updateActiveBuffer(prev => prev ? { ...prev, cursorRow: end.row, cursorCol: end.col } : prev);
+                    updateCursor(activeBuffer.id, end.row, end.col);
                   }
                 }}
                 onExitVisual={() => { setMode(Mode.NORMAL); setVisualAnchor(null); }}

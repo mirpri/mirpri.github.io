@@ -42,7 +42,7 @@ const StatusLine: React.FC<StatusLineProps> = ({ mode, file, cursorRow, cursorCo
       </div>
 
       {/* File Name */}
-      <div className="px-3 py-1 bg-tokyo-statusline text-tokyo-fg flex-1 font-medium">
+      <div className="px-3 py-1 bg-tokyo-statusline text-tokyo-fg flex-1 font-medium overflow-hidden whitespace-nowrap text-ellipsis">
          {file || '[No Name]'}
       </div>
 

@@ -23,6 +23,7 @@ export interface Buffer {
   fileId: string;
   title: string;
   content: string;
+  readOnly?: boolean;
   cursorRow: number;
   cursorCol: number;
   scrollOffset: number;

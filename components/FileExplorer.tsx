@@ -7,9 +7,10 @@ interface FileExplorerProps {
   onFileSelect: (id: string) => void;
   activeFileId: string | null;
   toggleFolder: (id: string) => void;
+  className?: string;
 }
 
-const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect, activeFileId, toggleFolder }) => {
+const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect, activeFileId, toggleFolder, className }) => {
   
   const renderTree = (nodes: FileNode[], depth = 0) => {
     return nodes.map(node => {
@@ -70,7 +71,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect, active
   };
 
   return (
-    <div className="h-full bg-tokyo-bg_dark border-r border-tokyo-statusline overflow-y-auto w-60 hidden md:block">
+    <div className={`h-full bg-tokyo-bg_dark border-r border-tokyo-statusline overflow-y-auto w-60 ${className || ''}`}>
        <div className="p-2 text-xs font-bold text-tokyo-comment uppercase tracking-wider mb-2 mt-2 ml-2">Explorer</div>
        {renderTree(files)}
     </div>

@@ -272,7 +272,7 @@ const HighlightLine: React.FC<{ text: string, type: string, cursorCol?: number, 
 const tokenize = (text: string, type: string): { text: string, className: string }[] => {
     if (type === 'markdown') {
       // Fallback for active line with cursor/selection: keep simple styling
-      if (text.startsWith('# ')) return [{ text, className: "text-tokyo-purple font-bold text-xl" }];
+      if (text.startsWith('# ')) return [{ text, className: "text-tokyo-purple font-bold text-2xl" }];
       if (text.startsWith('## ')) return [{ text, className: "text-tokyo-blue font-bold text-lg" }];
       return [{ text, className: "text-tokyo-fg" }];
     }
@@ -319,7 +319,7 @@ const MarkdownInline: React.FC<{ text: string }> = ({ text }) => (
       ul: ({ children }) => <ul className="list-disc leading-[0rem] ml-4 my-0 space-y-0 text-tokyo-fg">{children}</ul>,
       ol: ({ children }) => <ol className="list-decimal leading-[0rem] ml-4 my-0 space-y-0 text-tokyo-fg">{children}</ol>,
       li: ({ children }) => <li className="leading-6 text-tokyo-fg">{children}</li>,
-      h1: ({ children }) => <span className="block text-xl font-bold text-tokyo-purple">{children}</span>,
+      h1: ({ children }) => <span className="block text-2xl font-bold text-tokyo-purple">{children}</span>,
       h2: ({ children }) => <span className="block text-lg font-bold text-tokyo-blue">{children}</span>,
       blockquote: ({ children }) => <blockquote className="border-l-2 border-tokyo-comment/40 pl-3 text-tokyo-comment italic">{children}</blockquote>,
       hr: () => <hr className="border-tokyo-comment/30 my-2" />
