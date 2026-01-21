@@ -29,6 +29,7 @@ export interface Buffer {
   scrollOffset: number;
   isDirty: boolean;
   type: 'markdown' | 'typescript' | 'json' | 'dashboard' | 'chat';
+  path?: string; // Source path to resolve relative assets
 }
 
 export interface ThemeColor {

@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { Buffer, Mode } from '../types';
 import { Send, Bot, User } from 'lucide-react';
+import { resolveMarkdownAsset } from '../services/pagesService';
 
 interface EditorProps {
   buffer: Buffer;
@@ -88,7 +90,7 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, mode, selection, onCu
   };
 
   return (
-    <div ref={containerRef} className="h-full overflow-y-auto w-full bg-tokyo-bg font-mono text-sm leading-6 custom-scrollbar relative cursor-text" onMouseUp={handleMouseUp}>
+    <div ref={containerRef} className="h-full overflow-y-auto w-full bg-tokyo-bg font-mono custom-scrollbar relative cursor-text py-6" onMouseUp={handleMouseUp}>
        <div className="min-h-full pb-10">
         {lines.map((line, idx) => {
           const isCursorLine = isActive && idx === buffer.cursorRow;
@@ -128,14 +130,15 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, mode, selection, onCu
                 {idx + 1}
               </div>
               
-              {/* Line Content (wrap enabled) */}
-              <div className="flex-1 whitespace-pre-wrap pr-4 break-words min-h-[1.5em]" data-row={idx}>
+              {/* Line Content*/}
+              <div className="flex-1 whitespace-pre-wrap pr-4 break-words min-h-[1.5em] mx-auto block max-w-xl xl:max-w-4xl" data-row={idx}>
                 <HighlightLine 
                   text={line} 
                   type={buffer.type} 
                   cursorCol={isCursorLine ? buffer.cursorCol : undefined}
                   selStartCol={selStartCol}
                   selEndCol={selEndCol}
+                  basePath={buffer.path}
                 />
               </div>
             </div>
@@ -147,43 +150,16 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, mode, selection, onCu
 };
 
 // Simple Syntax Highlighter with Cursor Support
-const HighlightLine: React.FC<{ text: string, type: string, cursorCol?: number, selStartCol?: number, selEndCol?: number }> = ({ text, type, cursorCol, selStartCol, selEndCol }) => {
+const HighlightLine: React.FC<{ text: string, type: string, cursorCol?: number, selStartCol?: number, selEndCol?: number, basePath?: string }> = ({ text, type, cursorCol, selStartCol, selEndCol, basePath }) => {
     // If no cursor/selection, render efficiently
     if (cursorCol === undefined && (selStartCol === undefined || selEndCol === undefined)) {
       if (type === 'markdown') {
-       return <MarkdownInline text={text} />;
+       return <MarkdownInline text={text} basePath={basePath} />;
       }
-      return <SyntaxTokens text={text} type={type} />;
+      return <SyntaxTokens text={text} type={type} basePath={basePath} />;
     }
-
-  // Handle cursor logic
-  // We need to inject the cursor at the specific index.
-  // The simplest reliable way for valid syntax highlighting + cursor is to split the text into 3 parts:
-  // 1. Before cursor
-  // 2. Cursor Char
-  // 3. After cursor
   
   const hasCursor = cursorCol !== undefined && cursorCol >= 0;
-
-  // We render the syntax tokens for the whole line, but mask them or reconstruct them? 
-  // Reconstructing split syntax tokens is hard.
-  // Alternative strategy: Render syntax highlighted text, AND render a floating absolute cursor?
-  // No, absolute cursor alignment is tricky with variable fonts (though we use mono).
-  
-  // Strategy: Render characters individually if it's the active line to ensure perfect cursor placement
-  // This is expensive but fine for just 1 line.
-  
-  // Actually, let's use the split strategy on the raw text, but apply syntax coloring logic to the individual characters/segments.
-  // Since our syntax highlighter is regex based on words, splitting a word might break highlighting for that word.
-  // e.g. "impo|rt" -> "impo" (white) + "r" (cursor) + "t" (white). "import" should be purple.
-  
-  // Better Strategy for this specific "LazyVim" visual:
-  // Render the full syntax highlighted line normally. 
-  // Then overlay the cursor using a relative span wrapper? No, span wrapper changes layout.
-  
-  // Let's stick to the "Naive" highlighter which splits by space/punctuation.
-  // We can pass the full text to the highlighter, get back a list of tokens.
-  // Then we iterate the tokens to find which one contains the cursor index.
   
   const tokens = tokenize(text, type);
   let currentLength = 0;
@@ -295,9 +271,9 @@ const tokenize = (text: string, type: string): { text: string, className: string
 };
 
 // Component for non-active lines (faster)
-const SyntaxTokens: React.FC<{ text: string, type: string }> = ({ text, type }) => {
+const SyntaxTokens: React.FC<{ text: string, type: string, basePath?: string }> = ({ text, type, basePath }) => {
    if (type === 'markdown') {
-     return <MarkdownInline text={text} />;
+     return <MarkdownInline text={text} basePath={basePath} />;
    }
    const tokens = tokenize(text, type);
    return (
@@ -307,22 +283,27 @@ const SyntaxTokens: React.FC<{ text: string, type: string }> = ({ text, type }) 
    );
 };
 
-const MarkdownInline: React.FC<{ text: string }> = ({ text }) => (
+const MarkdownInline: React.FC<{ text: string, basePath?: string }> = ({ text, basePath }) => (
   <ReactMarkdown
     remarkPlugins={[remarkGfm]}
+    rehypePlugins={[rehypeRaw]}
     components={{
-      p: ({ children }) => <span className="text-tokyo-fg">{children}</span>,
+      p: ({ children }) => <span className="text-tokyo-fg font-sans max-w-lg">{children}</span>,
       a: ({ children, href }) => <a href={href} className="text-tokyo-cyan underline">{children}</a>,
       strong: ({ children }) => <span className="font-bold text-tokyo-fg">{children}</span>,
       em: ({ children }) => <span className="italic text-tokyo-fg">{children}</span>,
       code: ({ children }) => <code className="bg-tokyo-line_nr text-tokyo-orange px-1 rounded" style={{ fontSize: '0.9em' }}>{children}</code>,
       ul: ({ children }) => <ul className="list-disc leading-[0rem] ml-4 my-0 space-y-0 text-tokyo-fg">{children}</ul>,
       ol: ({ children }) => <ol className="list-decimal leading-[0rem] ml-4 my-0 space-y-0 text-tokyo-fg">{children}</ol>,
-      li: ({ children }) => <li className="leading-6 text-tokyo-fg">{children}</li>,
+      li: ({ children }) => <li className="leading-6 text-tokyo-fg font-sans">{children}</li>,
       h1: ({ children }) => <span className="block text-2xl font-bold text-tokyo-purple">{children}</span>,
       h2: ({ children }) => <span className="block text-lg font-bold text-tokyo-blue">{children}</span>,
       blockquote: ({ children }) => <blockquote className="border-l-2 border-tokyo-comment/40 pl-3 text-tokyo-comment italic">{children}</blockquote>,
-      hr: () => <hr className="border-tokyo-comment/30 my-2" />
+      hr: () => <hr className="border-tokyo-comment/30 my-2" />,
+      img: ({ src, alt, style }) => {
+        const resolved = resolveMarkdownAsset(src || '', basePath);
+        return <img src={resolved} alt={alt || ''} className="inline-block max-h-40 rounded-xl hover:rounded-none transition-all duration-300" style={style} title={alt || ''} />;
+      }
     }}
   >
     {text}

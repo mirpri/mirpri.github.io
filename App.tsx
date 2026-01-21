@@ -143,19 +143,31 @@ const App: React.FC = () => {
       return;
     }
 
-    // Logic to ensure buffer is open
-    // We can call openFile from store directly
-    
-    // Check if buffer is already active to avoid re-render loops or resetting cursor
     if (activeFileId !== file.id) {
         setActiveFile(file.id);
         setMode(Mode.NORMAL);
         setCommandBuffer('');
     }
 
-    // But wait, openFile checks existance. We should call it to ensure content.
-    // However, loading markdown content is async.
-    
+    let bufferType: Buffer['type'] = 'markdown';
+    if (file.extension === 'ts' || file.extension === 'tsx') bufferType = file.id === 'chat' ? 'chat' : 'typescript';
+    if (file.extension === 'json') bufferType = 'json';
+    if (file.extension === 'md') bufferType = 'markdown';
+    if (file.id === 'chat') bufferType = 'chat';
+
+    const bufferBase: Buffer = {
+      id: file.id,
+      fileId: file.id,
+      title: file.name,
+      path: file.path,
+      content: file.content || '',
+      cursorRow: 0,
+      cursorCol: 0,
+      scrollOffset: 0,
+      isDirty: false,
+      type: bufferType
+    };
+
     if (file.extension === 'md') {
       loadMarkdownContent(file.id).then(content => {
           openFile(file.id, content || '', file.name);
@@ -510,10 +522,10 @@ const App: React.FC = () => {
 
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-tokyo-bg text-tokyo-fg overflow-hidden font-mono text-sm">
+    <div className="flex flex-col h-screen w-screen bg-tokyo-bg text-tokyo-fg overflow-hidden font-mono">
       
       {/* Top Bar */}
-      <div className="h-9 bg-tokyo-bg_dark flex items-center border-b border-tokyo-statusline shrink-0">
+      <div className="h-9 bg-tokyo-bg_dark flex items-center border-b border-tokyo-statusline shrink-0 text-sm">
          <div className="w-16 flex justify-center items-center bg-tokyo-blue text-tokyo-bg_dark h-full font-bold cursor-pointer" onClick={() => navigate('/')}>
             <Home size={16} />
          </div>

@@ -41,19 +41,20 @@
         color: #c0caf5;
         overflow: hidden; /* Prevent native scroll */
       }
-      /* Custom Scrollbar for non-vim feel fallback */
-      .editor ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+      
+      /* Custom Scrollbar*/
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
       }
-      .editor ::-webkit-scrollbar-track {
+      ::-webkit-scrollbar-track {
         background: #1a1b26;
       }
-      .editor ::-webkit-scrollbar-thumb {
+      ::-webkit-scrollbar-thumb {
         background: #3b4261;
         border-radius: 4px;
       }
-      .editor ::-webkit-scrollbar-thumb:hover {
+      ::-webkit-scrollbar-thumb:hover {
         background: #7aa2f7;
       }
       /* Remove cursor transition/blink by default */
