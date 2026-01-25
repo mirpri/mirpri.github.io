@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Mode, FileNode, Buffer } from './types';
 import Dashboard from './components/Dashboard';
 import Editor from './components/Editor';
@@ -6,7 +6,7 @@ import StatusLine from './components/StatusLine';
 import FileExplorer from './components/FileExplorer';
 import { X, Home, FileCode, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
 import { Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { buildExplorerTree, getMarkdownPages, loadMarkdownContent } from './services/pagesService';
+import { buildExplorerTree, getMarkdownPages, loadMarkdownContent, getPageLoader } from './services/pagesService';
 import { useEditorStore } from './store';
 import { 
   nextWord, 
@@ -35,6 +35,7 @@ const App: React.FC = () => {
   
   const [files, setFiles] = useState<FileNode[]>([]);
   const [filesReady, setFilesReady] = useState(false);
+  const [ActivePage, setActivePage] = useState<React.ComponentType | null>(null);
 
   const activeBuffer = useMemo(() => {
     if (!activeFileId) return null;
@@ -112,6 +113,7 @@ const App: React.FC = () => {
     setMode(Mode.NORMAL);
     setCommandBuffer('');
     setVisualAnchor(null);
+    setActivePage(null);
     closeTab(activeFileId);
     navigate('/');
   };
@@ -122,6 +124,7 @@ const App: React.FC = () => {
        if (activeFileId === id) {
           setVisualAnchor(null);
           setMode(Mode.NORMAL);
+          setActivePage(null);
           navigate('/');
        }
     }
@@ -168,12 +171,29 @@ const App: React.FC = () => {
       type: bufferType
     };
 
-    if (file.extension === 'md') {
+    if (file.extension === 'md' ) {
       loadMarkdownContent(file.id).then(content => {
-          openFile(file.id, content || '', file.name);
+          if (content !== null) {
+              openFile(file.id, content, file.name);
+          } else {
+              openFile(file.id, file.content || '', file.name);
+          }
       });
+      setActivePage(null);
+    } else if (file.extension === 'tsx' && file.id !== 'chat') {
+      const loader = getPageLoader(file.id);
+      if (loader) {
+          // Open dummy buffer for tab
+          openFile(file.id, '(Component Loaded)', file.name);
+          const LazyComp = React.lazy(loader);
+          setActivePage(() => LazyComp);
+      } else {
+          openFile(file.id, file.content || '', file.name);
+          setActivePage(null);
+      }
     } else {
        openFile(file.id, file.content || '', file.name);
+       setActivePage(null);
     }
 
   }, [location, filesReady, files]); // Removed activeFileId to prevent loops? No, we need it if we change logic. But openFile handles check.
@@ -602,7 +622,14 @@ const App: React.FC = () => {
         <div className="flex-1 relative flex flex-col min-w-0 bg-tokyo-bg">
           <Routes>
             <Route path="/" element={<Dashboard onNavigate={navigateToFile} onQuit={() => window.location.href = 'about:blank'} />} />
-            <Route path=":page" element={activeBuffer ? (
+            <Route path="/*" element={
+              ActivePage ? (
+                <div className="h-full w-full overflow-y-auto bg-tokyo-bg text-tokyo-fg p-6">
+                  <Suspense fallback={<div className="text-tokyo-comment">Loading Component...</div>}>
+                    <ActivePage />
+                  </Suspense>
+                </div>
+              ) : activeBuffer ? (
               <Editor 
                 buffer={activeBuffer} 
                 isActive={true}

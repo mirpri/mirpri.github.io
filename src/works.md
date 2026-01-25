@@ -1,16 +1,35 @@
-# Projects
+## Roads
+Roads is a strategy game where you manage traffic flow and plan the most efficient routes, drawing inspiration from the famous game *Mini Metro (R)*. Test your planning skills and challenge yourself with increasingly complex city layouts, optimizing your traffic system to keep everything running smoothly.
 
-- E-Commerce Platform
-  - Role: Lead Frontend
-  - Stack: React, GraphQL, Node.js
-  - Description: Scaled to 1M+ users.
+For more about the game mechanics, updates, and development details, visit the GitHub repository.
 
-- AI Analytics Dashboard
-  - Role: Fullstack Dev
-  - Stack: Python, React, D3.js
-  - Description: Real-time data visualization.
+## Pong-N
+Pong-N is a modern twist on the classic arcade game Pong. With updated visuals and smoother gameplay, this version takes the traditional concept and elevates it to a new level. Challenge your reflexes and see how far you can go in this timeless game with a fresh perspective.
 
-- LazyVim Portfolio
-  - Role: Creator
-  - Stack: React, Tailwind
-  - Description: You're looking at it!
+Experience enhanced gameplay with added logging and model loading features, perfect for AI enthusiasts looking to dive deeper into the mechanics.
+
+For a detailed overview of the game, including features and enhancements, visit the project on GitHub, or download the latest release from here.
+
+## Word Strand
+Word Strand is a fun and challenging word puzzle game that tests your vocabulary and problem-solving skills. Link words together in a strand and solve puzzles to unlock new levels. It’s a great way to relax and engage your brain while expanding your lexicon.
+
+Start playing now and immerse yourself in this addictive word game by clicking on here.
+
+## MirNotes
+This document is a collection of my personal notes and observations as I dive into learning the C programming language and more. As I continue to study and experiment with coding, I record newly discovered features, tips, and techniques that I find particularly useful. Whether you're a beginner or looking to refine your coding skills, these notes might offer some valuable insights.
+
+To explore my ongoing learning journey, access the full notes [here](https://mirpri.github.io/mirnotes).
+
+## Watth (archived)
+Watth is an innovative math tool designed to help you effortlessly divide numbers. 
+Whether you're working on complex mathematical problems or just need a quick solution, this tool makes it easy to perform precise divisions with a simple interface.
+
+This this the first project for me to explore the coding world back in junior high. I tried to implement it with pygame and tkinter and spent a lot of time refining its interface.
+For a detailed overview and to explore the source code, visit the project’s page on [GitHub](https://github.com/Mirpri/watth).
+
+## Function Grapher
+Function Grapher is a powerful tool that allows you to draw and visualize mathematical functions. Whether you're a student learning math or a professional needing to analyze equations, this tool provides a clear graphical representation of functions, making it easier to understand their behavior.
+
+![screenshot](https://user-images.githubusercontent.com/71537369/200215903-78ba039f-de53-4c70-8507-6700d80bb7d5.png)
+
+Find more detailed information about the tool, including usage instructions and code, on [GitHub](https://github.com/Mirpri/function-grapher).

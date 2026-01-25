@@ -289,7 +289,7 @@ const MarkdownInline: React.FC<{ text: string, basePath?: string }> = ({ text, b
     rehypePlugins={[rehypeRaw]}
     components={{
       p: ({ children }) => <span className="text-tokyo-fg font-sans max-w-lg">{children}</span>,
-      a: ({ children, href }) => <a href={href} className="text-tokyo-cyan underline">{children}</a>,
+      a: ({ children, href }) => <a href={href} className="text-tokyo-cyan hover:text-tokyo-orange underline">{children}</a>,
       strong: ({ children }) => <span className="font-bold text-tokyo-fg">{children}</span>,
       em: ({ children }) => <span className="italic text-tokyo-fg">{children}</span>,
       code: ({ children }) => <code className="bg-tokyo-line_nr text-tokyo-orange px-1 rounded" style={{ fontSize: '0.9em' }}>{children}</code>,
