@@ -131,23 +131,13 @@ export const resolveMarkdownAsset = (src: string, fromPath?: string): string => 
 };
 
 export const buildExplorerTree = (extraNodes: FileNode[] = []): FileNode[] => {
-  const children: FileNode[] = [
+  return [
     {
       id: 'src',
       name: 'src',
       type: 'folder',
       isOpen: true,
       children: getMarkdownPages(),
-    },
-    ...extraNodes,
-  ];
-  return [
-    {
-      id: 'root',
-      name: 'portfolio',
-      type: 'folder',
-      isOpen: true,
-      children,
     },
   ];
 };

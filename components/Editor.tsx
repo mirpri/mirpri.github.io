@@ -3,7 +3,6 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { Buffer, Mode } from '../types';
-import { Send, Bot, User } from 'lucide-react';
 import { resolveMarkdownAsset } from '../services/pagesService';
 
 interface EditorProps {
@@ -55,20 +54,16 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, mode, selection, onCu
     const startRow = Number(anchorEl.getAttribute('data-row'));
     const endRow = Number(focusEl.getAttribute('data-row'));
 
-    const getOffsetInElement = (el: HTMLElement, node: Node, offset: number) => {
-      let count = 0;
-      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-      let current: Node | null = walker.nextNode();
-      while (current) {
-        if (current === node) {
-          count += Math.max(0, Math.min((current.textContent || '').length, offset));
-          break;
-        } else {
-          count += (current.textContent || '').length;
-        }
-        current = walker.nextNode();
+    const getOffsetInElement = (rowEl: HTMLElement, node: Node, offset: number) => {
+      try {
+        const range = document.createRange();
+        range.selectNodeContents(rowEl);
+        range.setStart(rowEl, 0);
+        range.setEnd(node, offset);
+        return range.toString().length;
+      } catch (e) {
+        return 0;
       }
-      return count;
     };
 
     const startCol = getOffsetInElement(anchorEl, sel.anchorNode!, sel.anchorOffset);
@@ -86,6 +81,7 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, mode, selection, onCu
       const start = { row: startRow, col: Math.max(0, startCol) };
       const end = { row: endRow, col: Math.max(0, endCol) };
       onMouseSelectionChange?.(start, end);
+      sel.removeAllRanges();
     }
   };
 
@@ -246,28 +242,14 @@ const HighlightLine: React.FC<{ text: string, type: string, cursorCol?: number, 
 
 // Helper to generate tokens with classes
 const tokenize = (text: string, type: string): { text: string, className: string }[] => {
-    if (type === 'markdown') {
-      // Fallback for active line with cursor/selection: keep simple styling
-      if (text.startsWith('# ')) return [{ text, className: "text-tokyo-purple font-bold text-2xl" }];
-      if (text.startsWith('## ')) return [{ text, className: "text-tokyo-blue font-bold text-lg" }];
-      return [{ text, className: "text-tokyo-fg" }];
-    }
-
-  if (type === 'typescript' || type === 'json') {
-     const parts = text.split(/(\s+|[(){}[\]:;,])/);
-     return parts.map(part => {
-        let className = "text-tokyo-fg";
-        if (['import', 'from', 'const', 'export', 'default', 'return', 'interface'].includes(part)) className = "text-tokyo-purple";
-        else if (['true', 'false', 'null', 'undefined'].includes(part)) className = "text-tokyo-orange";
-        else if (part.startsWith('"') || part.startsWith("'")) className = "text-tokyo-green";
-        else if (!isNaN(Number(part)) && part.trim() !== '') className = "text-tokyo-orange";
-        else if (['{','}','(',')','[',']'].includes(part)) className = "text-tokyo-cyan";
-        
-        return { text: part, className };
-     });
+  if (type === 'markdown') {
+    // Fallback for active line with cursor/selection: keep simple styling
+    if (text.startsWith('# ')) return [{ text, className: "text-tokyo-purple font-bold text-2xl" }];
+    if (text.startsWith('## ')) return [{ text, className: "text-tokyo-blue font-bold text-lg" }];
+    return [{ text, className: "text-tokyo-fg text-[1em]" }];
   }
 
-  return [{ text, className: "text-tokyo-fg" }];
+  return [{ text, className: "text-tokyo-fg text-[1em]" }];
 };
 
 // Component for non-active lines (faster)

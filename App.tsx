@@ -36,6 +36,7 @@ const App: React.FC = () => {
   const [files, setFiles] = useState<FileNode[]>([]);
   const [filesReady, setFilesReady] = useState(false);
   const [ActivePage, setActivePage] = useState<React.ComponentType | null>(null);
+  const [isFileLoading, setIsFileLoading] = useState(false);
 
   const activeBuffer = useMemo(() => {
     if (!activeFileId) return null;
@@ -69,6 +70,12 @@ const App: React.FC = () => {
   // Command Mode State
   const [commandBuffer, setCommandBuffer] = useState('');
   const [notification, setNotification] = useState<string | null>(null);
+
+  // Reset selection and mode when switching files
+  useEffect(() => {
+    setVisualAnchor(null);
+    setMode(Mode.NORMAL);
+  }, [activeFileId, setMode]);
 
   // Helper to find file recursively
   const findFile = (nodes: FileNode[], id: string): FileNode | null => {
@@ -172,12 +179,14 @@ const App: React.FC = () => {
     };
 
     if (file.extension === 'md' ) {
+      setIsFileLoading(true);
       loadMarkdownContent(file.id).then(content => {
           if (content !== null) {
               openFile(file.id, content, file.name);
           } else {
               openFile(file.id, file.content || '', file.name);
           }
+          setIsFileLoading(false);
       });
       setActivePage(null);
     } else if (file.extension === 'tsx' && file.id !== 'chat') {
@@ -191,9 +200,11 @@ const App: React.FC = () => {
           openFile(file.id, file.content || '', file.name);
           setActivePage(null);
       }
+      setIsFileLoading(false);
     } else {
        openFile(file.id, file.content || '', file.name);
        setActivePage(null);
+       setIsFileLoading(false);
     }
 
   }, [location, filesReady, files]); // Removed activeFileId to prevent loops? No, we need it if we change logic. But openFile handles check.
@@ -350,7 +361,7 @@ const App: React.FC = () => {
                gTimerRef.current = window.setTimeout(() => { gPendingRef.current = false; gTimerRef.current = null; }, 600);
              }
              // Yank current line in NORMAL mode
-             else if (e.key === 'y') {
+             else if (e.key === 'y' || (e.key === 'c' && e.ctrlKey)) {
                  e.preventDefault();
                  const lineText = currentLine;
                  if (lineText !== undefined) {
@@ -623,7 +634,11 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Dashboard onNavigate={navigateToFile} onQuit={() => window.location.href = 'about:blank'} />} />
             <Route path="/*" element={
-              ActivePage ? (
+              isFileLoading ? (
+                <div className="flex h-full w-full items-center justify-center text-tokyo-comment animate-pulse">
+                  Loading...
+                </div>
+              ) : ActivePage ? (
                 <div className="h-full w-full overflow-y-auto bg-tokyo-bg text-tokyo-fg p-6">
                   <Suspense fallback={<div className="text-tokyo-comment">Loading Component...</div>}>
                     <ActivePage />
@@ -648,7 +663,7 @@ const App: React.FC = () => {
                 onExitVisual={() => { setMode(Mode.NORMAL); setVisualAnchor(null); }}
               />
             ) : (
-              <Dashboard onNavigate={openFile} onQuit={() => window.location.href = 'about:blank'} />
+              <Dashboard onNavigate={navigateToFile} onQuit={() => window.location.href = 'about:blank'} />
             )} />
           </Routes>
         </div>
