@@ -284,7 +284,7 @@ const MarkdownInline: React.FC<{ text: string, basePath?: string }> = ({ text, b
       hr: () => <hr className="border-tokyo-comment/30 my-2" />,
       img: ({ src, alt, style }) => {
         const resolved = resolveMarkdownAsset(src || '', basePath);
-        return <img src={resolved} alt={alt || ''} className="inline-block max-h-80 rounded-xl hover:rounded-none transition-all duration-300" style={style} title={alt || ''} />;
+        return <img src={resolved} alt={alt || ''} className="inline-block max-h-80 rounded-3xl hover:rounded-none transition-all duration-300" style={style} title={alt || ''} />;
       }
     }}
   >

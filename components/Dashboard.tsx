@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FileText, Code, Cpu, Gamepad2, Zap} from 'lucide-react';
+import { FileText, Code, Cpu, Gamepad2, Zap, Book} from 'lucide-react';
 // import { useEditorStore } from '../store'; // If using store directly, but props is fine too
 
 interface DashboardProps {
@@ -20,6 +20,7 @@ const MENU_ITEMS = [
   { icon: FileText, label: "About Me", key: "a", fileId: "about", desc: "Get to know me" },
   { icon: Code, label: "My Works", key: "p", fileId: "works", desc: "See what I built" },
   { icon: Cpu, label: "Skills", key: "s", fileId: "skills", desc: "Tech stack stats" },
+  { icon: Book, label: "Learning", key: "l", fileId: "learning", desc: "View my learning insights" },
   { icon: Gamepad2, label: "Games", key: "g", fileId: "games/wordstrand", desc: "Play games" },
 ];
 
