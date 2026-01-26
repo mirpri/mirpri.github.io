@@ -1,3 +1,7 @@
+# MirNotes
+My learning notes built with VuePress.
+[Launch](https://mirpri.github.io/mirnotes)
+
 # Web Development Insights
 Learning web design is a journey full of challenges and fun. During this process, I deeply realized that daring to imagine and trying bravely are the keys to improving skills and perfecting works.
 
@@ -12,5 +16,3 @@ Web design is a continuous optimization process. I find problems in each attempt
 
 ## AI Assistance: Becoming My Design Partner
 Throughout the process, AI played an important role. Whenever I encounter difficulties, AI can always provide timely help, from basic code to solving complex logic problems. Its guidance saved me a lot of detours. Moreover, AI inspired me with many new ideas, such as how to achieve subtle gradient effects with CSS or add interactive functions with JavaScript. This companion-like support keeps my enthusiasm for design high.
-
-[Gemini](gemini.google.com)

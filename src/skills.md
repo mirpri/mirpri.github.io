@@ -1,6 +1,6 @@
 # Skills
 
-- Languages: TypeScript, JavaScript, Rust, Python, Go
-- Frameworks: React, Next.js, Vue, TailwindCSS
-- Tools: Neovim, Docker, Git, Linux
-- Soft Skills: Leadership, Mentoring, System Design
+- Languages: TypeScript, JavaScript, Rust, Python, Go, C++
+- Frameworks: React, Vue, Flutter, PyTorch
+- Tools: Neovim, vscode, Git, Arch Linux
+- Soft Skills: Leadership, Mentoring, Design
