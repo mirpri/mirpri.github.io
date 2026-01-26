@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <title>Mirpri👋</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              tokyo: {
+                bg: "#1a1b26",
+                bg_dark: "#16161e",
+                fg: "#c0caf5",
+                comment: "#565f89",
+                cyan: "#7dcfff",
+                blue: "#7aa2f7",
+                purple: "#bb9af7",
+                green: "#9ece6a",
+                red: "#f7768e",
+                yellow: "#e0af68",
+                orange: "#ff9e64",
+                selection: "#283457",
+                statusline: "#1f2335",
+                line_nr: "#3b4261",
+              },
+            },
+            fontFamily: {
+              mono: [
+                '"JetBrains Mono"',
+                '"Fira Code"',
+                "Consolas",
+                "monospace",
+              ],
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #1a1b26;
+        color: #c0caf5;
+        overflow: hidden; /* Prevent native scroll */
+      }
+
+      /* Custom Scrollbar*/
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1a1b26;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #3b4261;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #7aa2f7;
+      }
+      /* Remove cursor transition/blink by default */
+      .cursor-block {
+        animation: none;
+      }
+      /* Invert native selection for mouse-based selection */
+      ::selection {
+        background: #c0caf524;
+        /* color: #16161e; */
+      }
+      ::-moz-selection {
+        background: #c0caf524;
+        /* color: #16161e; */
+      }
+    </style>
+
+    <link rel="stylesheet" href="/index.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "react/": "https://esm.sh/react@^19.2.3/",
+          "react": "https://esm.sh/react@^19.2.3",
+          "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+          "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-BFLpFEql.js"></script>
+  </head>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-33SKNTLRN6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-33SKNTLRN6');
+  </script>
+
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
