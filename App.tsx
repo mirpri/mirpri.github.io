@@ -153,7 +153,9 @@ const App: React.FC = () => {
       return;
     }
 
-    if (activeFileId !== file.id) {
+    const isNewFile = activeFileId !== file.id;
+
+    if (isNewFile) {
         setActiveFile(file.id);
         setMode(Mode.NORMAL);
         setCommandBuffer('');
@@ -174,6 +176,11 @@ const App: React.FC = () => {
           return false;
         };
         expandParents(files, file.id);
+    }
+
+    if (!isNewFile && (ActivePage || buffers.find(b => b.id === file.id))) {
+       // Already loaded
+       return;
     }
 
     let bufferType: Buffer['type'] = 'markdown';
@@ -641,7 +648,7 @@ const App: React.FC = () => {
                 </div>
               ) : ActivePage ? (
                 <div className="h-full w-full overflow-y-auto bg-tokyo-bg text-tokyo-fg p-6">
-                  <Suspense fallback={<div className="text-tokyo-comment">Loading Component...</div>}>
+                  <Suspense fallback={<div className="flex h-full w-full items-center justify-center text-tokyo-comment animate-pulse">Loading Component...</div>}>
                     <ActivePage />
                   </Suspense>
                 </div>

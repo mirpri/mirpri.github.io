@@ -300,8 +300,9 @@ const WordStrand: React.FC = () => {
                 </div>
                 
                 <div className="mt-8 text-sm text-tokyo-comment max-w-md text-center">
-                    <p>Find valid words from the grid. Words must be at least 4 letters.</p>
-                    <p className="mt-2">Find 3 unlisted valid words to earn a hint!</p>
+                    <p>Find valid words from the grid.</p>
+                    <p>Words must be at least 4 letters.</p>
+                    <p>Find 3 unlisted valid words to earn a hint!</p>
                 </div>
             </div>
         );

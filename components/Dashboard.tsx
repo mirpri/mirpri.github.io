@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FileText, Code, Cpu, MessageSquare, Gamepad2 } from 'lucide-react';
+import { FileText, Code, Cpu, Gamepad2, Zap} from 'lucide-react';
 // import { useEditorStore } from '../store'; // If using store directly, but props is fine too
 
 interface DashboardProps {
@@ -148,7 +148,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       </div>
 
       <div className="mt-16 text-tokyo-comment text-sm">
-        <p>Neovim loaded in {Math.ceil(Math.random()*100)}ms</p>
+        <p className="flex items-center justify-center gap-2"><Zap size={15} /> Loaded in {Math.ceil(Math.random()*100)}ms</p>
       </div>
     </div>
   );

@@ -270,7 +270,7 @@ const MarkdownInline: React.FC<{ text: string, basePath?: string }> = ({ text, b
     remarkPlugins={[remarkGfm]}
     rehypePlugins={[rehypeRaw]}
     components={{
-      p: ({ children }) => <span className="text-tokyo-fg font-sans max-w-lg">{children}</span>,
+      p: ({ children }) => <span className="text-tokyo-fg font-sans max-w-lg text-lg">{children}</span>,
       a: ({ children, href }) => <a href={href} className="text-tokyo-cyan hover:text-tokyo-orange underline">{children}</a>,
       strong: ({ children }) => <span className="font-bold text-tokyo-fg">{children}</span>,
       em: ({ children }) => <span className="italic text-tokyo-fg">{children}</span>,
@@ -278,8 +278,8 @@ const MarkdownInline: React.FC<{ text: string, basePath?: string }> = ({ text, b
       ul: ({ children }) => <ul className="list-disc leading-[0rem] ml-4 my-0 space-y-0 text-tokyo-fg">{children}</ul>,
       ol: ({ children }) => <ol className="list-decimal leading-[0rem] ml-4 my-0 space-y-0 text-tokyo-fg">{children}</ol>,
       li: ({ children }) => <li className="leading-6 text-tokyo-fg font-sans">{children}</li>,
-      h1: ({ children }) => <span className="block text-2xl font-bold text-tokyo-purple">{children}</span>,
-      h2: ({ children }) => <span className="block text-lg font-bold text-tokyo-blue">{children}</span>,
+      h1: ({ children }) => <span className="block text-4xl font-bold text-tokyo-purple">{children}</span>,
+      h2: ({ children }) => <span className="block text-xl font-bold text-tokyo-blue">{children}</span>,
       blockquote: ({ children }) => <blockquote className="border-l-2 border-tokyo-comment/40 pl-3 text-tokyo-comment italic">{children}</blockquote>,
       hr: () => <hr className="border-tokyo-comment/30 my-2" />,
       img: ({ src, alt, style }) => {
