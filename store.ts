@@ -8,7 +8,7 @@ interface EditorState {
 
   // Actions
   setMode: (mode: Mode) => void;
-  openFile: (fileId: string, content: string, name: string) => void;
+  openFile: (fileId: string, content: string, name: string, type?: Buffer['type']) => void;
   closeFile: (fileId: string) => void;
   setActiveFile: (fileId: string | null) => void;
   updateBuffer: (fileId: string, content: string) => void;
@@ -23,7 +23,7 @@ export const useEditorStore = create<EditorState>((set) => ({
 
   setMode: (mode) => set({ mode }),
 
-  openFile: (fileId, content, name) => 
+  openFile: (fileId, content, name, type = 'markdown') => 
     set((state) => {
       // Check if buffer already exists
       const existingBuffer = state.buffers.find(b => b.id === fileId);
@@ -42,7 +42,7 @@ export const useEditorStore = create<EditorState>((set) => ({
         scrollOffset: 0,
         isDirty: false,
         readOnly: true, // Markdown pages are readonly by default
-        type: 'markdown',
+        type: type,
       };
 
       return {

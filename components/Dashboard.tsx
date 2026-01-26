@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FileText, Code, Cpu, MessageSquare, Power } from 'lucide-react';
+import { FileText, Code, Cpu, MessageSquare, Gamepad2 } from 'lucide-react';
 // import { useEditorStore } from '../store'; // If using store directly, but props is fine too
 
 interface DashboardProps {
@@ -18,9 +18,9 @@ const ASCII_ART = `
 
 const MENU_ITEMS = [
   { icon: FileText, label: "About Me", key: "a", fileId: "about", desc: "Get to know me" },
-  { icon: Code, label: "My Projects", key: "p", fileId: "works", desc: "See what I built" },
+  { icon: Code, label: "My Works", key: "p", fileId: "works", desc: "See what I built" },
   { icon: Cpu, label: "Skills", key: "s", fileId: "skills", desc: "Tech stack stats" },
-  { icon: MessageSquare, label: "Ask AI", key: "c", fileId: "chat", desc: "Chat with Gemini" },
+  { icon: Gamepad2, label: "Games", key: "g", fileId: "games/wordstrand", desc: "Play games" },
 ];
 
 const GLITCH_CHARS = ['$', '@', '#', '%', '&', '!', '?', '<', '>', '/', '\\', '|', '[', ']', '{', '}'];

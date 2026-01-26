@@ -28,7 +28,7 @@ export interface Buffer {
   cursorCol: number;
   scrollOffset: number;
   isDirty: boolean;
-  type: 'markdown' | 'typescript' | 'json' | 'dashboard' | 'chat';
+  type: 'markdown' | 'tsx' | 'dashboard';
   path?: string; // Source path to resolve relative assets
 }
 

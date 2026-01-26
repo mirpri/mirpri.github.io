@@ -21,9 +21,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect, active
       let Icon = FileText;
       if (isFolder) Icon = Folder;
       else if (node.extension === 'ts' || node.extension === 'tsx') Icon = FileCode;
-      else if (node.extension === 'json') Icon = FileJson;
-      else if (node.extension === 'lua') Icon = FileCode;
-      else if (node.extension === 'md') Icon = FileText;
+      else Icon = FileText;
 
       return (
         <div key={node.id}>
@@ -51,7 +49,6 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect, active
             <Icon size={14} className={`mr-2 ${
                 isFolder ? 'text-tokyo-blue' : 
                 node.extension === 'ts' || node.extension === 'tsx' ? 'text-tokyo-cyan' :
-                node.extension === 'json' ? 'text-tokyo-yellow' :
                 'text-tokyo-fg'
             }`} />
             

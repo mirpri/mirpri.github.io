@@ -4,7 +4,7 @@ import Dashboard from './components/Dashboard';
 import Editor from './components/Editor';
 import StatusLine from './components/StatusLine';
 import FileExplorer from './components/FileExplorer';
-import { X, Home, FileCode, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
+import { X, Home, FileCode, PanelLeftOpen, PanelLeftClose, FileText } from 'lucide-react';
 import { Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { buildExplorerTree, getMarkdownPages, loadMarkdownContent, getPageLoader } from './services/pagesService';
 import { useEditorStore } from './store';
@@ -89,12 +89,12 @@ const App: React.FC = () => {
     return null;
   };
 
-  const toggleFolder = (id: string) => {
+  const toggleFolder = (id: string, forceState?: boolean) => {
      const newFiles = [...files];
      const toggleNode = (nodes: FileNode[]) => {
         for (const node of nodes) {
            if (node.id === id) {
-              node.isOpen = !node.isOpen;
+              node.isOpen = forceState !== undefined ? forceState : !node.isOpen;
               return true;
            }
            if (node.children) {
@@ -157,13 +157,29 @@ const App: React.FC = () => {
         setActiveFile(file.id);
         setMode(Mode.NORMAL);
         setCommandBuffer('');
+
+        // Expand parent folders
+        const expandParents = (nodes: FileNode[], targetId: string): boolean => {
+          for (const node of nodes) {
+            if (node.id === targetId) return true;
+            if (node.children) {
+              if (expandParents(node.children, targetId)) {
+                if (node.type === 'folder' && !node.isOpen) {
+                   toggleFolder(node.id, true);
+                }
+                return true;
+              }
+            }
+          }
+          return false;
+        };
+        expandParents(files, file.id);
     }
 
     let bufferType: Buffer['type'] = 'markdown';
-    if (file.extension === 'ts' || file.extension === 'tsx') bufferType = file.id === 'chat' ? 'chat' : 'typescript';
-    if (file.extension === 'json') bufferType = 'json';
-    if (file.extension === 'md') bufferType = 'markdown';
-    if (file.id === 'chat') bufferType = 'chat';
+    if (['tsx', 'ts', 'json', 'js', 'css', 'html'].includes(file.extension || '')) {
+       bufferType = 'tsx';
+    }
 
     const bufferBase: Buffer = {
       id: file.id,
@@ -182,46 +198,31 @@ const App: React.FC = () => {
       setIsFileLoading(true);
       loadMarkdownContent(file.id).then(content => {
           if (content !== null) {
-              openFile(file.id, content, file.name);
+              openFile(file.id, content, file.name, 'markdown');
           } else {
-              openFile(file.id, file.content || '', file.name);
+              openFile(file.id, file.content || '', file.name, 'markdown');
           }
           setIsFileLoading(false);
       });
       setActivePage(null);
-    } else if (file.extension === 'tsx' && file.id !== 'chat') {
+    } else if (file.extension === 'tsx') {
       const loader = getPageLoader(file.id);
       if (loader) {
-          // Open dummy buffer for tab
-          openFile(file.id, '(Component Loaded)', file.name);
+          openFile(file.id, '(Component Loaded)', file.name, 'tsx');
           const LazyComp = React.lazy(loader);
           setActivePage(() => LazyComp);
       } else {
-          openFile(file.id, file.content || '', file.name);
+          openFile(file.id, file.content || '', file.name, 'tsx');
           setActivePage(null);
       }
       setIsFileLoading(false);
     } else {
-       openFile(file.id, file.content || '', file.name);
+       openFile(file.id, file.content || '', file.name, bufferType);
        setActivePage(null);
        setIsFileLoading(false);
     }
 
-  }, [location, filesReady, files]); // Removed activeFileId to prevent loops? No, we need it if we change logic. But openFile handles check.
-  
-  // Wait, the "updateActiveBuffer" method was used heavily. 
-  // We need to replace usages of it with updateBuffer from store or similar.
-  // The original updateActiveBuffer was complex (handling array update).
-  // Our store "updateBuffer" just takes id and content. What about cursor?
-  // We need to extend store to handle cursor updates if we want to move cursor state to store completely.
-  // BUT the request was "use zustand to manage mode, selection, opened editors". 
-  // It didn't explicitly say cursor position, but usually "opened editors" implies their state.
-  // Let's assume cursor pos is part of buffer state.
-  
-  // Let's update store.ts to handle cursor updates first.
-
-// We removed updateActiveBuffer and the old useEffect.
-// Now we need to handle command execution.
+  }, [location, filesReady, files]);
 
   const executeCommand = async (cmd: string) => {
     const cleanCmd = cmd.trim();
@@ -580,7 +581,7 @@ const App: React.FC = () => {
                    onClick={() => navigate(`/${buf.fileId}`)}
                    className={`px-4 h-full flex items-center border-r border-tokyo-statusline cursor-pointer ${isActive ? 'bg-tokyo-bg text-tokyo-fg' : 'text-tokyo-comment hover:text-tokyo-fg'}`}
                  >
-                   <span className="mr-2 text-tokyo-cyan"><FileCode size={14}/></span>
+                   <span className="mr-2">{buf.type==='tsx'?<FileCode size={14} className=" text-tokyo-cyan"/> : <FileText size={14} className="text-tokyo-fg"/>}</span>
                    {buf.title}
                    <button
                      onClick={(e) => { e.stopPropagation(); closeTab(buf.id); }}
@@ -690,9 +691,7 @@ const App: React.FC = () => {
          ) : notification ? (
             <span className="text-tokyo-red font-bold">{notification}</span>
          ) : (
-            activeBuffer?.type === 'chat' 
-              ? <span className="text-tokyo-comment">Chat active. Type your question below.</span>
-              : <span className="text-tokyo-comment">{activeBuffer ? 'Try vim commands!' : 'Welcome to My Home Page! © 2026 Mirpri'}</span>
+            <span className="text-tokyo-comment">{activeBuffer ? 'Try vim commands!' : 'Welcome to My Home Page! © 2026 Mirpri'}</span>
          )}
       </div>
     </div>
