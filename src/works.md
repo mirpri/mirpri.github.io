@@ -1,5 +1,10 @@
 # My Works
 
+## NeonVocab
+Build up your vocabulary with this webpage! Engage in Daily Challenges and get motivated with streaks and statistics.
+![screenshot](https://github.com/mirpri/neonvocab/raw/master/res/screenshot1.png)
+[Open](https://mirpri.github.io/neonvocab)
+
 ## Roads
 Roads is a strategy game where you manage traffic flow and plan the most efficient routes, drawing inspiration from the famous game *Mini Metro (R)*. Test your planning skills and challenge yourself with increasingly complex city layouts, optimizing your traffic system to keep everything running smoothly.
 
@@ -23,11 +28,6 @@ Start playing now and immerse yourself in this addictive word game by clicking o
 This document is a collection of my personal notes and observations as I dive into learning the C programming language and more. As I continue to study and experiment with coding, I record newly discovered features, tips, and techniques that I find particularly useful. Whether you're a beginner or looking to refine your coding skills, these notes might offer some valuable insights.
 
 To explore my ongoing learning journey, access the full notes [here](https://mirpri.github.io/mirnotes).
-
-## NeonVocab
-Build up your vocabulary with this webpage! Engage in Daily Challenges and get motivated with streaks and statistics.
-![screenshot](https://github.com/mirpri/neonvocab/raw/master/res/screenshot1.png)
-[Open](https://mirpri.github.io/neonvocab)
 
 ## Watth (archived)
 Watth is an innovative math tool designed to help you effortlessly divide numbers. 

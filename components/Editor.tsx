@@ -271,20 +271,20 @@ const MarkdownInline: React.FC<{ text: string, basePath?: string }> = ({ text, b
     rehypePlugins={[rehypeRaw]}
     components={{
       p: ({ children }) => <span className="text-tokyo-fg font-sans max-w-lg text-lg">{children}</span>,
-      a: ({ children, href, style}) => <a href={href} className="text-tokyo-cyan hover:text-tokyo-orange underline" style={style}>{children}</a>,
+      a: ({ children, href, style}) => <a href={href} className="px-1.5 text-tokyo-cyan hover:text-tokyo-orange border border-tokyo-cyan hover:border-tokyo-orange rounded-[100px] font-mono text-base hover:rounded-[0px] transition-all duration-300" style={style}>{children}</a>,
       strong: ({ children }) => <span className="font-bold text-tokyo-fg">{children}</span>,
       em: ({ children }) => <span className="italic text-tokyo-fg">{children}</span>,
       code: ({ children }) => <code className="bg-tokyo-line_nr text-tokyo-orange px-1 rounded" style={{ fontSize: '0.9em' }}>{children}</code>,
       ul: ({ children }) => <ul className="list-disc leading-[0rem] ml-4 my-0 space-y-0 text-tokyo-fg">{children}</ul>,
       ol: ({ children }) => <ol className="list-decimal leading-[0rem] ml-4 my-0 space-y-0 text-tokyo-fg">{children}</ol>,
-      li: ({ children }) => <li className="leading-6 text-tokyo-fg font-sans">{children}</li>,
+      li: ({ children }) => <li className="text-tokyo-fg font-sans text-lg">{children}</li>,
       h1: ({ children }) => <span className="block text-4xl font-bold text-tokyo-purple">{children}</span>,
       h2: ({ children }) => <span className="block text-2xl font-bold text-tokyo-blue">{children}</span>,
-      blockquote: ({ children }) => <blockquote className="border-l-2 border-tokyo-comment/40 pl-3 text-tokyo-comment italic">{children}</blockquote>,
+      blockquote: ({ children }) => <blockquote className="border-l-2 border-tokyo-comment/40 pl-3 text-tokyo-comment font-sans italic">{children}</blockquote>,
       hr: () => <hr className="border-tokyo-comment/30 my-2" />,
       img: ({ src, alt, style }) => {
         const resolved = resolveMarkdownAsset(src || '', basePath);
-        return <img src={resolved} alt={alt || ''} className="inline-block max-h-80 rounded-3xl hover:rounded-none transition-all duration-300" style={style} title={alt || ''} />;
+        return <img src={resolved} alt={alt || ''} className="inline-block max-h-80 rounded-3xl p-0.5 hover:rounded-none border border-tokyo-comment transition-all duration-300" style={style} title={alt || ''} />;
       }
     }}
   >
