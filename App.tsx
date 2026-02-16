@@ -43,6 +43,15 @@ const App: React.FC = () => {
     return buffers.find(b => b.id === activeFileId) || null;
   }, [buffers, activeFileId]);
 
+  // Update document title based on active buffer
+  useEffect(() => {
+    if (activeBuffer) {
+      document.title = `Mirpri - ${activeBuffer.title}`;
+    } else {
+      document.title = 'Mirpri👋';
+    }
+  }, [activeBuffer]);
+
     // Initialize explorer from markdown pages plus special Chat page
     useEffect(() => {
       const extraNodes: FileNode[] = [
