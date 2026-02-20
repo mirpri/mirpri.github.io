@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FileText, Code, Cpu, Gamepad2, Zap, Book} from 'lucide-react';
+import { FileText, Code, Cpu, Gamepad2, Zap, Book, icons, Compass} from 'lucide-react';
 // import { useEditorStore } from '../store'; // If using store directly, but props is fine too
 
 interface DashboardProps {
@@ -17,10 +17,11 @@ const ASCII_ART = `
 `;
 
 const MENU_ITEMS = [
+  { icon: Compass, label: "Speed Dial", key: "s", fileId: "SpeedDial", desc: "Access links" },
   { icon: FileText, label: "About Me", key: "a", fileId: "about", desc: "Get to know me" },
-  { icon: Code, label: "My Works", key: "p", fileId: "works", desc: "See what I built" },
+  { icon: Code, label: "My Works", key: "p", fileId: "works", desc: "What I built" },
   { icon: Cpu, label: "Skills", key: "s", fileId: "skills", desc: "Tech stack stats" },
-  { icon: Book, label: "Learning", key: "l", fileId: "learning", desc: "View my learning insights" },
+  { icon: Book, label: "Learning", key: "l", fileId: "learning", desc: "Notes & insights" },
   { icon: Gamepad2, label: "Games", key: "g", fileId: "games/wordstrand", desc: "Play games" },
 ];
 
@@ -60,14 +61,9 @@ const AsciiArt = () => {
                return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
             }
             
-            // If we are in recovery phase and the wave has passed this point (wake),
-            // restore the original character.
             if (isRecovery && dist < 0) {
               return initialLines[y][x];
             }
-            
-            // Otherwise, keep the current state (persistence)
-            // This handles the "destruction" wake where chars stay randomized
             return char;
           }).join('');
         }).join('\n');
@@ -78,7 +74,7 @@ const AsciiArt = () => {
   }, []);
 
   return (
-    <pre className="mb-10 text-tokyo-blue font-mono font-bold leading-none select-none text-[9px] md:text-xs lg:text-sm text-center whitespace-pre w-full overflow-hidden">
+    <pre className="mb-10 text-tokyo-blue font-mono font-bold leading-none select-none text-[8px] sm:text-xs lg:text-sm text-center whitespace-pre w-full overflow-hidden">
       {art}
     </pre>
   );
@@ -115,7 +111,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-tokyo-bg text-tokyo-fg select-none pb-20">
+    <div className="flex flex-col items-center justify-center h-full w-full bg-tokyo-bg text-tokyo-fg select-none p-8">
       <AsciiArt />
 
       <div className="flex flex-col gap-2 w-full max-w-md">
@@ -148,7 +144,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         })}
       </div>
 
-      <div className="mt-16 text-tokyo-comment text-sm">
+      <div className="mt-4 text-tokyo-comment text-sm">
         <p className="flex items-center justify-center gap-2"><Zap size={15} /> Loaded in {Math.ceil(Math.random()*100)}ms</p>
       </div>
     </div>
