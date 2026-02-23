@@ -8,14 +8,10 @@ import { resolveMarkdownAsset } from '../services/pagesService';
 interface EditorProps {
   buffer: Buffer;
   isActive: boolean;
-  mode?: Mode;
   selection?: { start: { row: number; col: number }, end: { row: number; col: number } } | null;
-  onCursorChange?: (row: number, col: number) => void;
-  onMouseSelectionChange?: (start: { row: number; col: number }, end: { row: number; col: number }) => void;
-  onExitVisual?: () => void;
 }
 
-const Editor: React.FC<EditorProps> = ({ buffer, isActive, mode, selection, onCursorChange, onMouseSelectionChange, onExitVisual }) => {
+const Editor: React.FC<EditorProps> = ({ buffer, isActive, selection}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeLineRef = useRef<HTMLDivElement>(null);
 
@@ -29,65 +25,9 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, mode, selection, onCu
   // Render Standard Text Editor
   const lines = buffer.content.split('\n');
 
-  // Mouse selection/click handling: update cursor and selection to match text selection
-  const handleMouseUp = () => {
-    const sel = window.getSelection();
-    if (!sel || sel.rangeCount === 0) return;
-    // Safely resolve the line element tagged with data-row
-    const resolveRowElement = (node: Node | null): HTMLElement | null => {
-      if (!node) return null;
-      let el: HTMLElement | null = null;
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        el = (node as HTMLElement);
-      } else if ((node as any).parentElement) {
-        el = (node as any).parentElement as HTMLElement;
-      }
-      return el ? el.closest('[data-row]') as HTMLElement | null : null;
-    };
-
-    const anchorEl = resolveRowElement(sel.anchorNode);
-    const focusEl = resolveRowElement(sel.focusNode);
-    if (!anchorEl || !focusEl) {
-      // Click outside text lines
-      return;
-    }
-    const startRow = Number(anchorEl.getAttribute('data-row'));
-    const endRow = Number(focusEl.getAttribute('data-row'));
-
-    const getOffsetInElement = (rowEl: HTMLElement, node: Node, offset: number) => {
-      try {
-        const range = document.createRange();
-        range.selectNodeContents(rowEl);
-        range.setStart(rowEl, 0);
-        range.setEnd(node, offset);
-        return range.toString().length;
-      } catch (e) {
-        return 0;
-      }
-    };
-
-    const startCol = getOffsetInElement(anchorEl, sel.anchorNode!, sel.anchorOffset);
-    const endCol = getOffsetInElement(focusEl, sel.focusNode!, sel.focusOffset);
-
-    if (sel.isCollapsed) {
-      // Simple click: move cursor
-      onCursorChange?.(endRow, Math.max(0, Math.min(endCol, (lines[endRow] || '').length)));
-      // If currently in Visual mode, exit it on simple click
-      if (mode === Mode.VISUAL) {
-        onExitVisual?.();
-      }
-    } else {
-      // Visual selection: sync selection
-      const start = { row: startRow, col: Math.max(0, startCol) };
-      const end = { row: endRow, col: Math.max(0, endCol) };
-      onMouseSelectionChange?.(start, end);
-      sel.removeAllRanges();
-    }
-  };
-
   return (
-    <div ref={containerRef} className="h-full overflow-y-auto w-full bg-tokyo-bg font-mono custom-scrollbar relative cursor-text py-6" onMouseUp={handleMouseUp}>
-       <div className="min-h-full pb-10">
+    <div ref={containerRef} className="h-full overflow-y-auto w-full bg-tokyo-bg font-mono custom-scrollbar relative py-6">
+       <div className="min-h-full pb-10 text-[1.25rem]">
         {lines.map((line, idx) => {
           const isCursorLine = isActive && idx === buffer.cursorRow;
           // Compute selection columns for this line if selection exists
@@ -246,10 +186,10 @@ const tokenize = (text: string, type: string): { text: string, className: string
     // Fallback for active line with cursor/selection: keep simple styling
     if (text.startsWith('# ')) return [{ text, className: "text-tokyo-purple font-bold text-4xl" }];
     if (text.startsWith('## ')) return [{ text, className: "text-tokyo-blue font-bold text-2xl" }];
-    return [{ text, className: "text-tokyo-fg text-[1em]" }];
+    return [{ text, className: "text-tokyo-fg text-[1.1rem]" }];
   }
 
-  return [{ text, className: "text-tokyo-fg text-[1em]" }];
+  return [{ text, className: "text-tokyo-fg text-[1.1rem]" }];
 };
 
 // Component for non-active lines (faster)
@@ -270,7 +210,7 @@ const MarkdownInline: React.FC<{ text: string, basePath?: string }> = ({ text, b
     remarkPlugins={[remarkGfm]}
     rehypePlugins={[rehypeRaw]}
     components={{
-      p: ({ children }) => <span className="text-tokyo-fg font-sans max-w-lg text-lg">{children}</span>,
+      p: ({ children }) => <span className="text-tokyo-fg font-sans max-w-lg">{children}</span>,
       a: ({ children, href, style}) => <a href={href} className="px-1.5 text-tokyo-cyan hover:text-tokyo-orange border border-tokyo-cyan hover:border-tokyo-orange rounded-[100px] font-mono text-base hover:rounded-[0px] transition-all duration-300" style={style}>{children}</a>,
       strong: ({ children }) => <span className="font-bold text-tokyo-fg">{children}</span>,
       em: ({ children }) => <span className="italic text-tokyo-fg">{children}</span>,

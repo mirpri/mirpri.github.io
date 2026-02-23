@@ -4,8 +4,7 @@
 Mirpass is a flexible OAuth system offering both Authorization Code Flow and Device Code Flow, making secure authentication simple for any application. Effortlessly integrate Mirpass into your project and enhance your users' login experience. [Sign up](https://pass.mirpri.com/)
 
 ## NeonVocab
-Build up your vocabulary with this webpage! Engage in Daily Challenges and get motivated with streaks and statistics.
-[Open](https://mirpri.com/neonvocab)
+Build up your vocabulary with this webpage! Engage in Daily Challenges and get motivated with streaks and statistics. [Open](https://mirpri.com/neonvocab)
 
 ![screenshot](https://github.com/mirpri/neonvocab/raw/master/res/screenshot1.png)
 

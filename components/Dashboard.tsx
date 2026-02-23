@@ -17,9 +17,9 @@ const ASCII_ART = `
 `;
 
 const MENU_ITEMS = [
-  { icon: Compass, label: "Speed Dial", key: "s", fileId: "SpeedDial", desc: "Access links" },
+  { icon: Compass, label: "Speed Dial", key: "d", fileId: "SpeedDial", desc: "Access links" },
   { icon: FileText, label: "About Me", key: "a", fileId: "about", desc: "Get to know me" },
-  { icon: Code, label: "My Works", key: "p", fileId: "works", desc: "What I built" },
+  { icon: Code, label: "My Works", key: "w", fileId: "works", desc: "What I built" },
   { icon: Cpu, label: "Skills", key: "s", fileId: "skills", desc: "Tech stack stats" },
   { icon: Book, label: "Learning", key: "l", fileId: "learning", desc: "Notes & insights" },
   { icon: Gamepad2, label: "Games", key: "g", fileId: "games/wordstrand", desc: "Play games" },

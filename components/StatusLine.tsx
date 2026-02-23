@@ -29,7 +29,7 @@ const StatusLine: React.FC<StatusLineProps> = ({ mode, file, cursorRow, cursorCo
   })();
 
   return (
-    <div className="h-6 w-full bg-tokyo-statusline flex items-center text-xs font-mono select-none z-10">
+    <div className="h-6 w-full bg-tokyo-statusline flex items-center text-sm font-mono select-none z-10">
       {/* Mode Indicator */}
       <div className={`${getModeColor()} px-3 py-1 font-bold uppercase transition-colors duration-200`}>
         {mode}

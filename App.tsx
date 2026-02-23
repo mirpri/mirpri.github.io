@@ -667,16 +667,8 @@ const App: React.FC = () => {
                 isActive={true}
                 mode={mode}
                 selection={visualAnchor ? { start: visualAnchor, end: { row: activeBuffer.cursorRow, col: activeBuffer.cursorCol } } : null}
-                onCursorChange={(row, col) => {
-                  updateCursor(activeBuffer.id, row, col);
-                }}
-                onMouseSelectionChange={(start, end) => {
-                  if (start && end) {
-                    setMode(Mode.VISUAL);
-                    setVisualAnchor(start);
-                    updateCursor(activeBuffer.id, end.row, end.col);
-                  }
-                }}
+                onCursorChange={(row, col) => {}}
+                onMouseSelectionChange={(start, end) => {}}
                 onExitVisual={() => { setMode(Mode.NORMAL); setVisualAnchor(null); }}
               />
             ) : (
@@ -697,7 +689,7 @@ const App: React.FC = () => {
       />
       
       {/* Command Line / Message Bar */}
-      <div className="h-6 bg-tokyo-bg text-tokyo-fg flex items-center px-2 text-xs border-t border-tokyo-statusline shrink-0">
+      <div className="h-8 bg-tokyo-bg text-tokyo-fg flex items-center px-2 border-t border-tokyo-statusline shrink-0">
          {mode === Mode.COMMAND ? (
             <div className="flex items-center w-full">
                <span className="font-bold mr-1">:</span>
