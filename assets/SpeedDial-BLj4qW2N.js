@@ -216,7 +216,7 @@ const SpeedDial: React.FC = () => {
                       </div>
                     )}
       
-                    <div className={\`mr-4 p-2 rounded-full bg-opacity-10 \${isSelected ? 'bg-tokyo-purple' : 'bg-transparent'}\`}>
+                    <div className={\`mr-4 p-2 rounded-full border-2 \${isSelected ? 'border-tokyo-purple/80' : 'border-transparent'}\`}>
                       <Icon className={\`w-6 h-6 \${item.color || 'text-tokyo-fg'}\`} />
                     </div>
                     
