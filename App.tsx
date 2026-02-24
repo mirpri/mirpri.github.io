@@ -8,31 +8,31 @@ import { X, Home, FileCode, PanelLeftOpen, PanelLeftClose, FileText } from 'luci
 import { Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { buildExplorerTree, getMarkdownPages, loadMarkdownContent, getPageLoader } from './services/pagesService';
 import { useEditorStore } from './store';
-import { 
-  nextWord, 
-  prevWord, 
-  nextWordEnd, 
-  prevWordEnd, 
-  nextParagraph, 
-  prevParagraph, 
+import {
+  nextWord,
+  prevWord,
+  nextWordEnd,
+  prevWordEnd,
+  nextParagraph,
+  prevParagraph,
   computeSelectionText, // computeSelectionText is needed
   // ... others likely not needed if logic moved but let's see
   firstNonWhitespace
 } from './services/vimService';
 
 const App: React.FC = () => {
-  const { 
-    mode, 
-    setMode, 
-    activeFileId, 
-    setActiveFile, 
-    buffers, 
-    openFile, 
-    closeFile, 
+  const {
+    mode,
+    setMode,
+    activeFileId,
+    setActiveFile,
+    buffers,
+    openFile,
+    closeFile,
     updateBuffer,
     updateCursor
   } = useEditorStore();
-  
+
   const [files, setFiles] = useState<FileNode[]>([]);
   const [filesReady, setFilesReady] = useState(false);
   const [ActivePage, setActivePage] = useState<React.ComponentType | null>(null);
@@ -52,20 +52,20 @@ const App: React.FC = () => {
     }
   }, [activeBuffer]);
 
-    // Initialize explorer from markdown pages plus special Chat page
-    useEffect(() => {
-      const extraNodes: FileNode[] = [
-        {
-          id: 'chat',
-          name: 'ask_ai.tsx',
-          type: 'file',
-          extension: 'tsx',
-          content: 'Chat interface initializing...',
-        }
-      ];
-      setFiles(buildExplorerTree(extraNodes));
-      setFilesReady(true);
-    }, []);
+  // Initialize explorer from markdown pages plus special Chat page
+  useEffect(() => {
+    const extraNodes: FileNode[] = [
+      {
+        id: 'chat',
+        name: 'ask_ai.tsx',
+        type: 'file',
+        extension: 'tsx',
+        content: 'Chat interface initializing...',
+      }
+    ];
+    setFiles(buildExplorerTree(extraNodes));
+    setFilesReady(true);
+  }, []);
 
   const [showExplorer, setShowExplorer] = useState(() => {
     if (typeof window === 'undefined') return true;
@@ -75,7 +75,7 @@ const App: React.FC = () => {
   // Pending key combos (e.g., 'gg', 'ge')
   const gPendingRef = useRef(false);
   const gTimerRef = useRef<number | null>(null);
-  
+
   // Command Mode State
   const [commandBuffer, setCommandBuffer] = useState('');
   const [notification, setNotification] = useState<string | null>(null);
@@ -99,21 +99,21 @@ const App: React.FC = () => {
   };
 
   const toggleFolder = (id: string, forceState?: boolean) => {
-     const newFiles = [...files];
-     const toggleNode = (nodes: FileNode[]) => {
-        for (const node of nodes) {
-           if (node.id === id) {
-              node.isOpen = forceState !== undefined ? forceState : !node.isOpen;
-              return true;
-           }
-           if (node.children) {
-              if (toggleNode(node.children)) return true;
-           }
+    const newFiles = [...files];
+    const toggleNode = (nodes: FileNode[]) => {
+      for (const node of nodes) {
+        if (node.id === id) {
+          node.isOpen = forceState !== undefined ? forceState : !node.isOpen;
+          return true;
         }
-        return false;
-     };
-     toggleNode(newFiles);
-     setFiles(newFiles);
+        if (node.children) {
+          if (toggleNode(node.children)) return true;
+        }
+      }
+      return false;
+    };
+    toggleNode(newFiles);
+    setFiles(newFiles);
   };
 
 
@@ -136,16 +136,16 @@ const App: React.FC = () => {
 
   const closeTab = (id: string | null) => {
     if (id) {
-       closeFile(id);
-       if (activeFileId === id) {
-          setVisualAnchor(null);
-          setMode(Mode.NORMAL);
-          setActivePage(null);
-          navigate('/');
-       }
+      closeFile(id);
+      if (activeFileId === id) {
+        setVisualAnchor(null);
+        setMode(Mode.NORMAL);
+        setActivePage(null);
+        navigate('/');
+      }
     }
   };
-  
+
   // Route -> Buffer sync
   const location = useLocation();
   useEffect(() => {
@@ -165,36 +165,36 @@ const App: React.FC = () => {
     const isNewFile = activeFileId !== file.id;
 
     if (isNewFile) {
-        setActiveFile(file.id);
-        setMode(Mode.NORMAL);
-        setCommandBuffer('');
+      setActiveFile(file.id);
+      setMode(Mode.NORMAL);
+      setCommandBuffer('');
 
-        // Expand parent folders
-        const expandParents = (nodes: FileNode[], targetId: string): boolean => {
-          for (const node of nodes) {
-            if (node.id === targetId) return true;
-            if (node.children) {
-              if (expandParents(node.children, targetId)) {
-                if (node.type === 'folder' && !node.isOpen) {
-                   toggleFolder(node.id, true);
-                }
-                return true;
+      // Expand parent folders
+      const expandParents = (nodes: FileNode[], targetId: string): boolean => {
+        for (const node of nodes) {
+          if (node.id === targetId) return true;
+          if (node.children) {
+            if (expandParents(node.children, targetId)) {
+              if (node.type === 'folder' && !node.isOpen) {
+                toggleFolder(node.id, true);
               }
+              return true;
             }
           }
-          return false;
-        };
-        expandParents(files, file.id);
+        }
+        return false;
+      };
+      expandParents(files, file.id);
     }
 
     if (!isNewFile && (ActivePage || buffers.find(b => b.id === file.id))) {
-       // Already loaded
-       return;
+      // Already loaded
+      return;
     }
 
     let bufferType: Buffer['type'] = 'markdown';
     if (['tsx', 'ts', 'json', 'js', 'css', 'html'].includes(file.extension || '')) {
-       bufferType = 'tsx';
+      bufferType = 'tsx';
     }
 
     const bufferBase: Buffer = {
@@ -210,32 +210,32 @@ const App: React.FC = () => {
       type: bufferType
     };
 
-    if (file.extension === 'md' ) {
+    if (file.extension === 'md') {
       setIsFileLoading(true);
       loadMarkdownContent(file.id).then(content => {
-          if (content !== null) {
-              openFile(file.id, content, file.name, 'markdown');
-          } else {
-              openFile(file.id, file.content || '', file.name, 'markdown');
-          }
-          setIsFileLoading(false);
+        if (content !== null) {
+          openFile(file.id, content, file.name, 'markdown');
+        } else {
+          openFile(file.id, file.content || '', file.name, 'markdown');
+        }
+        setIsFileLoading(false);
       });
       setActivePage(null);
     } else if (file.extension === 'tsx') {
       const loader = getPageLoader(file.id);
       if (loader) {
-          openFile(file.id, '(Component Loaded)', file.name, 'tsx');
-          const LazyComp = React.lazy(loader);
-          setActivePage(() => LazyComp);
+        openFile(file.id, '(Component Loaded)', file.name, 'tsx');
+        const LazyComp = React.lazy(loader);
+        setActivePage(() => LazyComp);
       } else {
-          openFile(file.id, file.content || '', file.name, 'tsx');
-          setActivePage(null);
+        openFile(file.id, file.content || '', file.name, 'tsx');
+        setActivePage(null);
       }
       setIsFileLoading(false);
     } else {
-       openFile(file.id, file.content || '', file.name, bufferType);
-       setActivePage(null);
-       setIsFileLoading(false);
+      openFile(file.id, file.content || '', file.name, bufferType);
+      setActivePage(null);
+      setIsFileLoading(false);
     }
 
   }, [location, filesReady, files]);
@@ -244,7 +244,7 @@ const App: React.FC = () => {
     const cleanCmd = cmd.trim();
     if (cleanCmd === 'q' || cleanCmd === 'q!' || cleanCmd === 'wq') {
       closeBuffer();
-    } else if ( cleanCmd === 'qa' || cleanCmd === 'qa!'){
+    } else if (cleanCmd === 'qa' || cleanCmd === 'qa!') {
       // Close all buffers
       // We need a store action for this, or just loop
       // Simplified:
@@ -275,8 +275,8 @@ const App: React.FC = () => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
         // Unless it's escape
         if (e.key === 'Escape') {
-             (e.target as HTMLElement).blur();
-             setMode(Mode.NORMAL);
+          (e.target as HTMLElement).blur();
+          setMode(Mode.NORMAL);
         }
         return;
       }
@@ -291,7 +291,7 @@ const App: React.FC = () => {
         } else if (e.key === 'Backspace') {
           setCommandBuffer(prev => prev.slice(0, -1));
           if (commandBuffer.length === 0) {
-             setMode(Mode.NORMAL);
+            setMode(Mode.NORMAL);
           }
         } else if (e.key === 'Escape') {
           setMode(Mode.NORMAL);
@@ -303,258 +303,264 @@ const App: React.FC = () => {
       }
 
       // Shortcut to toggle explorer
-      if (e.key === 'e' && e.altKey) { 
-          e.preventDefault();
-          setShowExplorer(prev => !prev);
-          return;
+      if (e.key === 'e' && e.altKey) {
+        e.preventDefault();
+        setShowExplorer(prev => !prev);
+        return;
       }
 
       if (activeFileId && activeBuffer && activeBuffer.type !== 'chat') {
-         if (e.key === 'Escape') {
-             setMode(Mode.NORMAL);
-             setCommandBuffer('');
-           setVisualAnchor(null);
-         }
+        if (e.key === 'Escape') {
+          setMode(Mode.NORMAL);
+          setCommandBuffer('');
+          setVisualAnchor(null);
+        }
 
-         // Normal Mode Navigation
-         if (mode === Mode.NORMAL) {
-            // resolve pending 'g' combos first
-            if (gPendingRef.current) {
-              // clear pending if any key pressed next
-              gPendingRef.current = false;
-              if (gTimerRef.current) { clearTimeout(gTimerRef.current); gTimerRef.current = null; }
-              const lines = activeBuffer.content.split('\n');
-              if (e.key === 'g') {
-                e.preventDefault();
-                if (activeBuffer) updateCursor(activeBuffer.id, 0, Math.min(activeBuffer.cursorCol, (lines[0] || '').length));
-                return;
-              } else if (e.key === 'e') {
-                e.preventDefault();
-                if (activeBuffer) {
-                  const pos = nextWordEnd(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
-                  updateCursor(activeBuffer.id, pos.row, pos.col);
-                }
-                return;
-              }
-              // fallthrough to handle this key normally
-            }
-             if (e.key === ':') {
-                 setMode(Mode.COMMAND);
-                 return;
-             }
-             
-             const lines = activeBuffer.content.split('\n');
-             const currentLine = lines[activeBuffer.cursorRow] || '';
-
-
-             if (e.key === 'j' || e.key === 'ArrowDown') {
-                 if (activeBuffer) {
-                   const nextRow = Math.min(lines.length - 1, activeBuffer.cursorRow + 1);
-                   const nextLineLen = lines[nextRow].length;
-                   updateCursor(activeBuffer.id, nextRow, Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen - 1)));
-                 }
-             } else if (e.key === 'k' || e.key === 'ArrowUp') {
-                 if (activeBuffer) {
-                   const nextRow = Math.max(0, activeBuffer.cursorRow - 1);
-                   const nextLineLen = lines[nextRow].length;
-                   updateCursor(activeBuffer.id, nextRow, Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen - 1)));
-                 }
-             } else if (e.key === 'l' || e.key === 'ArrowRight') {
-                 if (activeBuffer) {
-                   updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.min(activeBuffer.cursorCol + 1, currentLine.length));
-                 }
-             } else if (e.key === 'h' || e.key === 'ArrowLeft') {
-                 if (activeBuffer) {
-                    updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.max(0, activeBuffer.cursorCol - 1));
-                 }
-             } else if (e.key === 'v') {
-                 setMode(Mode.VISUAL);
-                 if (activeBuffer) setVisualAnchor({ row: activeBuffer.cursorRow, col: activeBuffer.cursorCol });
-                 e.preventDefault();
-             } else if (e.key === 'g') {
-               e.preventDefault();
-               gPendingRef.current = true;
-               if (gTimerRef.current) { clearTimeout(gTimerRef.current); }
-               gTimerRef.current = window.setTimeout(() => { gPendingRef.current = false; gTimerRef.current = null; }, 600);
-             }
-             // Yank current line in NORMAL mode
-             else if (e.key === 'y' || (e.key === 'c' && e.ctrlKey)) {
-                 e.preventDefault();
-                 const lineText = currentLine;
-                 if (lineText !== undefined) {
-                   navigator.clipboard.writeText(lineText).then(() => {
-                     setNotification('Line yanked to clipboard');
-                     setTimeout(() => setNotification(null), 1500);
-                   }).catch(() => {
-                     setNotification('Failed to copy');
-                     setTimeout(() => setNotification(null), 1500);
-                   });
-                 }
-               } else if (e.key === '0') {
-                   e.preventDefault();
-                   if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, 0);
-               } else if (e.key === '$') {
-                   e.preventDefault();
-                   if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, (lines[activeBuffer.cursorRow] || '').length);
-               } else if (e.key === 'e') {
-                   e.preventDefault();
-                   if (activeBuffer) {
-                     const pos = nextWordEnd(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
-                     updateCursor(activeBuffer.id, pos.row, pos.col);
-                   }
-               } else if (e.key === 'G') {
-                   e.preventDefault();
-                   if (activeBuffer) {
-                     const targetRow = lines.length - 1;
-                     const targetCol = Math.min(activeBuffer.cursorCol, (lines[targetRow] || '').length);
-                     updateCursor(activeBuffer.id, targetRow, targetCol);
-                   }
-             } else if (e.key === 'w') {
-                 e.preventDefault();
-                   if (activeBuffer) {
-                     const pos = nextWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
-                     updateCursor(activeBuffer.id, pos.row, pos.col);
-                   }
-             } else if (e.key === 'b') {
-                 e.preventDefault();
-                   if (activeBuffer) {
-                     const pos = prevWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
-                     updateCursor(activeBuffer.id, pos.row, pos.col);
-                   }
-             } else if (e.key === '}') {
-                 e.preventDefault();
-                   if (activeBuffer) {
-                     const pos = nextParagraph(lines, activeBuffer.cursorRow);
-                     updateCursor(activeBuffer.id, pos.row, pos.col);
-                   }
-             } else if (e.key === '{') {
-                 e.preventDefault();
-                   if (activeBuffer) {
-                     const pos = prevParagraph(lines, activeBuffer.cursorRow);
-                     updateCursor(activeBuffer.id, pos.row, pos.col);
-                   }
-             }
-         }
-
-         // Visual Mode Navigation and Yank
-         if (mode === Mode.VISUAL) {
-             const lines = activeBuffer.content.split('\n');
-             const currentLine = lines[activeBuffer.cursorRow] || '';
-
-             // resolve pending 'g' combos first
-             if (gPendingRef.current) {
-               gPendingRef.current = false;
-               if (gTimerRef.current) { clearTimeout(gTimerRef.current); gTimerRef.current = null; }
-               if (e.key === 'g') {
-                 e.preventDefault();
-                 if (activeBuffer) {
-                   const targetRow = 0;
-                   const targetCol = Math.min(activeBuffer.cursorCol, (lines[targetRow] || '').length);
-                   updateCursor(activeBuffer.id, targetRow, targetCol);
-                 }
-                 return;
-               } else if (e.key === 'e') {
-                 e.preventDefault();
-                 if (activeBuffer) {
-                   const pos = prevWordEnd(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
-                   updateCursor(activeBuffer.id, pos.row, pos.col);
-                 }
-                 return;
-               }
-               // fallthrough
-             }
-
-             if (e.key === 'j' || e.key === 'ArrowDown') {
-               e.preventDefault();
-               if (activeBuffer) {
-                 const nextRow = Math.min(lines.length - 1, activeBuffer.cursorRow + 1);
-                 const nextLineLen = lines[nextRow].length;
-                 updateCursor(activeBuffer.id, nextRow, Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen)));
-               }
-             } else if (e.key === 'k' || e.key === 'ArrowUp') {
-               e.preventDefault();
-               if (activeBuffer) {
-                 const nextRow = Math.max(0, activeBuffer.cursorRow - 1);
-                 const nextLineLen = lines[nextRow].length;
-                 updateCursor(activeBuffer.id, nextRow, Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen)));
-               }
-             } else if (e.key === 'l' || e.key === 'ArrowRight') {
-               e.preventDefault();
-               if (activeBuffer) {
-                 updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.min(activeBuffer.cursorCol + 1, currentLine.length));
-               }
-             } else if (e.key === 'h' || e.key === 'ArrowLeft') {
-               e.preventDefault();
-               if (activeBuffer) {
-                 updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.max(0, activeBuffer.cursorCol - 1));
-               }
-             } else if (e.key === 'y') {
-
-               e.preventDefault();
-               // Compute selection from visualAnchor to current cursor
-               if (visualAnchor) {
-                 const selText = computeSelectionText(activeBuffer.content, visualAnchor, { row: activeBuffer.cursorRow, col: activeBuffer.cursorCol });
-                 navigator.clipboard.writeText(selText).then(() => {
-                   setNotification('Selection yanked to clipboard');
-                   setTimeout(() => setNotification(null), 1500);
-                 }).catch(() => {
-                   setNotification('Failed to copy');
-                   setTimeout(() => setNotification(null), 1500);
-                 });
-                 // Exit visual mode after yank
-                 setMode(Mode.NORMAL);
-                 setVisualAnchor(null);
-               }
-            } else if (e.key === 'g') {
+        // Normal Mode Navigation
+        if (mode === Mode.NORMAL) {
+          // resolve pending 'g' combos first
+          if (gPendingRef.current) {
+            // clear pending if any key pressed next
+            gPendingRef.current = false;
+            if (gTimerRef.current) { clearTimeout(gTimerRef.current); gTimerRef.current = null; }
+            const lines = activeBuffer.content.split('\n');
+            if (e.key === 'g') {
               e.preventDefault();
-              gPendingRef.current = true;
-              if (gTimerRef.current) { clearTimeout(gTimerRef.current); }
-              gTimerRef.current = window.setTimeout(() => { gPendingRef.current = false; gTimerRef.current = null; }, 600);
-            } else if (e.key === '0') {
-              e.preventDefault();
-              if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, 0);
-            } else if (e.key === '$') {
-              e.preventDefault();
-              if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, (lines[activeBuffer.cursorRow] || '').length);
+              if (activeBuffer) updateCursor(activeBuffer.id, 0, Math.min(activeBuffer.cursorCol, (lines[0] || '').length));
+              return;
             } else if (e.key === 'e') {
               e.preventDefault();
               if (activeBuffer) {
                 const pos = nextWordEnd(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
                 updateCursor(activeBuffer.id, pos.row, pos.col);
               }
-            } else if (e.key === 'G') {
-              e.preventDefault();
-              if (activeBuffer) {
-                const targetRow = lines.length - 1;
-                const targetCol = Math.min(activeBuffer.cursorCol, (lines[targetRow] || '').length);
-                useEditorStore.getState().updateCursor(activeBuffer.id, targetRow, targetCol);
-              }
-            } else if (e.key === 'w') {
-              e.preventDefault();
-              if (activeBuffer) {
-                const pos = nextWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
-                useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
-              }
-            } else if (e.key === 'b') {
-              e.preventDefault();
-              if (activeBuffer) {
-                const pos = prevWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
-                useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
-              }
-            } else if (e.key === '}') {
-              e.preventDefault();
-              if (activeBuffer) {
-                const pos = nextParagraph(lines, activeBuffer.cursorRow);
-                useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
-              }
-            } else if (e.key === '{') {
-              e.preventDefault();
-              if (activeBuffer) {
-                const pos = prevParagraph(lines, activeBuffer.cursorRow);
-                useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
-              }
+              return;
             }
-         }
+            // fallthrough to handle this key normally
+          }
+          if (e.key === ':') {
+            setMode(Mode.COMMAND);
+            return;
+          }
+
+          const lines = activeBuffer.content.split('\n');
+          const currentLine = lines[activeBuffer.cursorRow] || '';
+
+
+          if (e.key === 'j' || e.key === 'ArrowDown') {
+            if (activeBuffer) {
+              const nextRow = Math.min(lines.length - 1, activeBuffer.cursorRow + 1);
+              const nextLineLen = lines[nextRow].length;
+              updateCursor(activeBuffer.id, nextRow, snapCol(lines[nextRow], Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen - 1))));
+            }
+          } else if (e.key === 'k' || e.key === 'ArrowUp') {
+            if (activeBuffer) {
+              const nextRow = Math.max(0, activeBuffer.cursorRow - 1);
+              const nextLineLen = lines[nextRow].length;
+              updateCursor(activeBuffer.id, nextRow, snapCol(lines[nextRow], Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen - 1))));
+            }
+          } else if (e.key === 'l' || e.key === 'ArrowRight') {
+            if (activeBuffer) {
+              const step = charLenAt(currentLine, activeBuffer.cursorCol);
+              updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.min(activeBuffer.cursorCol + step, currentLine.length));
+            }
+          } else if (e.key === 'h' || e.key === 'ArrowLeft') {
+            if (activeBuffer) {
+              const prev = activeBuffer.cursorCol - 1;
+              const col = (prev > 0 && currentLine.charCodeAt(prev) >= 0xDC00 && currentLine.charCodeAt(prev) <= 0xDFFF) ? prev - 1 : prev;
+              updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.max(0, col));
+            }
+          } else if (e.key === 'v') {
+            setMode(Mode.VISUAL);
+            if (activeBuffer) setVisualAnchor({ row: activeBuffer.cursorRow, col: activeBuffer.cursorCol });
+            e.preventDefault();
+          } else if (e.key === 'g') {
+            e.preventDefault();
+            gPendingRef.current = true;
+            if (gTimerRef.current) { clearTimeout(gTimerRef.current); }
+            gTimerRef.current = window.setTimeout(() => { gPendingRef.current = false; gTimerRef.current = null; }, 600);
+          }
+          // Yank current line in NORMAL mode
+          else if (e.key === 'y') {
+            e.preventDefault();
+            const lineText = currentLine;
+            if (lineText !== undefined) {
+              navigator.clipboard.writeText(lineText).then(() => {
+                setNotification('Line yanked to clipboard');
+                setTimeout(() => setNotification(null), 1500);
+              }).catch(() => {
+                setNotification('Failed to copy');
+                setTimeout(() => setNotification(null), 1500);
+              });
+            }
+          } else if (e.key === '0') {
+            e.preventDefault();
+            if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, 0);
+          } else if (e.key === '$') {
+            e.preventDefault();
+            if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, (lines[activeBuffer.cursorRow] || '').length);
+          } else if (e.key === 'e') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const pos = nextWordEnd(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+              updateCursor(activeBuffer.id, pos.row, pos.col);
+            }
+          } else if (e.key === 'G') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const targetRow = lines.length - 1;
+              const targetCol = Math.min(activeBuffer.cursorCol, (lines[targetRow] || '').length);
+              updateCursor(activeBuffer.id, targetRow, targetCol);
+            }
+          } else if (e.key === 'w') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const pos = nextWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+              updateCursor(activeBuffer.id, pos.row, pos.col);
+            }
+          } else if (e.key === 'b') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const pos = prevWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+              updateCursor(activeBuffer.id, pos.row, pos.col);
+            }
+          } else if (e.key === '}') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const pos = nextParagraph(lines, activeBuffer.cursorRow);
+              updateCursor(activeBuffer.id, pos.row, pos.col);
+            }
+          } else if (e.key === '{') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const pos = prevParagraph(lines, activeBuffer.cursorRow);
+              updateCursor(activeBuffer.id, pos.row, pos.col);
+            }
+          }
+        }
+
+        // Visual Mode Navigation and Yank
+        if (mode === Mode.VISUAL) {
+          const lines = activeBuffer.content.split('\n');
+          const currentLine = lines[activeBuffer.cursorRow] || '';
+
+          // resolve pending 'g' combos first
+          if (gPendingRef.current) {
+            gPendingRef.current = false;
+            if (gTimerRef.current) { clearTimeout(gTimerRef.current); gTimerRef.current = null; }
+            if (e.key === 'g') {
+              e.preventDefault();
+              if (activeBuffer) {
+                const targetRow = 0;
+                const targetCol = Math.min(activeBuffer.cursorCol, (lines[targetRow] || '').length);
+                updateCursor(activeBuffer.id, targetRow, targetCol);
+              }
+              return;
+            } else if (e.key === 'e') {
+              e.preventDefault();
+              if (activeBuffer) {
+                const pos = prevWordEnd(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+                updateCursor(activeBuffer.id, pos.row, pos.col);
+              }
+              return;
+            }
+            // fallthrough
+          }
+
+          if (e.key === 'j' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const nextRow = Math.min(lines.length - 1, activeBuffer.cursorRow + 1);
+              const nextLineLen = lines[nextRow].length;
+              updateCursor(activeBuffer.id, nextRow, snapCol(lines[nextRow], Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen))));
+            }
+          } else if (e.key === 'k' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const nextRow = Math.max(0, activeBuffer.cursorRow - 1);
+              const nextLineLen = lines[nextRow].length;
+              updateCursor(activeBuffer.id, nextRow, snapCol(lines[nextRow], Math.min(activeBuffer.cursorCol, Math.max(0, nextLineLen))));
+            }
+          } else if (e.key === 'l' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const step = charLenAt(currentLine, activeBuffer.cursorCol);
+              updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.min(activeBuffer.cursorCol + step, currentLine.length));
+            }
+          } else if (e.key === 'h' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const prev = activeBuffer.cursorCol - 1;
+              const col = (prev > 0 && currentLine.charCodeAt(prev) >= 0xDC00 && currentLine.charCodeAt(prev) <= 0xDFFF) ? prev - 1 : prev;
+              updateCursor(activeBuffer.id, activeBuffer.cursorRow, Math.max(0, col));
+            }
+          } else if (e.key === 'y') {
+
+            e.preventDefault();
+            // Compute selection from visualAnchor to current cursor
+            if (visualAnchor) {
+              const selText = computeSelectionText(activeBuffer.content, visualAnchor, { row: activeBuffer.cursorRow, col: activeBuffer.cursorCol });
+              navigator.clipboard.writeText(selText).then(() => {
+                setNotification('Selection yanked to clipboard');
+                setTimeout(() => setNotification(null), 1500);
+              }).catch(() => {
+                setNotification('Failed to copy');
+                setTimeout(() => setNotification(null), 1500);
+              });
+              // Exit visual mode after yank
+              setMode(Mode.NORMAL);
+              setVisualAnchor(null);
+            }
+          } else if (e.key === 'g') {
+            e.preventDefault();
+            gPendingRef.current = true;
+            if (gTimerRef.current) { clearTimeout(gTimerRef.current); }
+            gTimerRef.current = window.setTimeout(() => { gPendingRef.current = false; gTimerRef.current = null; }, 600);
+          } else if (e.key === '0') {
+            e.preventDefault();
+            if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, 0);
+          } else if (e.key === '$') {
+            e.preventDefault();
+            if (activeBuffer) updateCursor(activeBuffer.id, activeBuffer.cursorRow, (lines[activeBuffer.cursorRow] || '').length);
+          } else if (e.key === 'e') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const pos = nextWordEnd(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+              updateCursor(activeBuffer.id, pos.row, pos.col);
+            }
+          } else if (e.key === 'G') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const targetRow = lines.length - 1;
+              const targetCol = Math.min(activeBuffer.cursorCol, (lines[targetRow] || '').length);
+              useEditorStore.getState().updateCursor(activeBuffer.id, targetRow, targetCol);
+            }
+          } else if (e.key === 'w') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const pos = nextWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+              useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
+            }
+          } else if (e.key === 'b') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const pos = prevWord(lines, activeBuffer.cursorRow, activeBuffer.cursorCol);
+              useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
+            }
+          } else if (e.key === '}') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const pos = nextParagraph(lines, activeBuffer.cursorRow);
+              useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
+            }
+          } else if (e.key === '{') {
+            e.preventDefault();
+            if (activeBuffer) {
+              const pos = prevParagraph(lines, activeBuffer.cursorRow);
+              useEditorStore.getState().updateCursor(activeBuffer.id, pos.row, pos.col);
+            }
+          }
+        }
       }
     };
 
@@ -568,48 +574,62 @@ const App: React.FC = () => {
   const goLineStart = (lines: string[], row: number) => ({ row, col: 0 });
   const goLineEnd = (lines: string[], row: number) => ({ row, col: (lines[row] || '').length });
 
+  // Surrogate-pair helpers: skip over the 2nd code unit of emoji
+  const charLenAt = (str: string, i: number): number => {
+    const c = str.charCodeAt(i);
+    return (c >= 0xD800 && c <= 0xDBFF && i + 1 < str.length) ? 2 : 1;
+  };
+  const snapCol = (line: string, col: number): number => {
+    // If col lands on a low surrogate (2nd half), back up by 1
+    if (col > 0 && col < line.length) {
+      const c = line.charCodeAt(col);
+      if (c >= 0xDC00 && c <= 0xDFFF) return col - 1;
+    }
+    return col;
+  };
+
 
   return (
     <div className="flex flex-col h-screen w-screen bg-tokyo-bg text-tokyo-fg overflow-hidden font-mono">
-      
+
       {/* Top Bar */}
       <div className="h-9 bg-tokyo-bg_dark flex items-center border-b border-tokyo-statusline shrink-0 text-sm">
-         <div className="w-16 flex justify-center items-center bg-tokyo-blue text-tokyo-bg_dark h-full font-bold cursor-pointer" onClick={() => navigate('/')}>
-            <Home size={16} />
-         </div>
-         <button
-           className="h-full px-3 flex items-center border-r border-tokyo-statusline text-tokyo-comment hover:text-tokyo-fg"
-           onClick={() => setShowExplorer(prev => !prev)}
-         >
-           {showExplorer ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
-         </button>
-         <div className="flex-1 h-full flex overflow-x-auto">
-           {buffers.length === 0 ? (
-             <div className="px-4 h-full flex items-center text-tokyo-comment italic">
-                Dashboard
-             </div>
-           ) : (
-             buffers.map(buf => {
-               const isActive = buf.id === activeFileId;
-               return (
-                 <div
-                   key={buf.id}
-                   onClick={() => navigate(`/${buf.fileId}`)}
-                   className={`px-4 h-full flex items-center border-r border-tokyo-statusline cursor-pointer ${isActive ? 'bg-tokyo-bg text-tokyo-fg' : 'text-tokyo-comment hover:text-tokyo-fg'}`}
-                 >
-                   <span className="mr-2">{buf.type==='tsx'?<FileCode size={14} className=" text-tokyo-cyan"/> : <FileText size={14} className="text-tokyo-fg"/>}</span>
-                   {buf.title}
-                   <button
-                     onClick={(e) => { e.stopPropagation(); closeTab(buf.id); }}
-                     className="ml-3 hover:text-tokyo-red"
-                   >
-                     <X size={12} />
-                   </button>
-                 </div>
-               );
-             })
-           )}
-         </div>
+        <div className="w-16 flex justify-center items-center bg-tokyo-blue text-tokyo-bg_dark h-full font-bold cursor-pointer" onClick={() => navigate('/')}>
+          <Home size={16} />
+        </div>
+        <button
+          className="h-full px-3 flex items-center border-r border-tokyo-statusline text-tokyo-comment hover:text-tokyo-fg"
+          onClick={() => setShowExplorer(prev => !prev)}
+        >
+          {showExplorer ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
+        </button>
+        <div className="flex-1 h-full flex overflow-x-auto">
+          {buffers.length === 0 ? (
+            <div className="px-4 h-full flex items-center text-tokyo-comment italic">
+              Dashboard
+            </div>
+          ) : (
+            buffers.map(buf => {
+              const isActive = buf.id === activeFileId;
+              return (
+                <div
+                  key={buf.id}
+                  onClick={() => navigate(`/${buf.fileId}`)}
+                  className={`px-4 h-full flex items-center border-r border-tokyo-statusline cursor-pointer ${isActive ? 'bg-tokyo-bg text-tokyo-fg' : 'text-tokyo-comment hover:text-tokyo-fg'}`}
+                >
+                  <span className="mr-2">{buf.type === 'tsx' ? <FileCode size={14} className=" text-tokyo-cyan" /> : <FileText size={14} className="text-tokyo-fg" />}</span>
+                  {buf.title}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); closeTab(buf.id); }}
+                    className="ml-3 hover:text-tokyo-red"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
 
       {/* Main Content Area */}
@@ -617,10 +637,10 @@ const App: React.FC = () => {
         {/* Desktop explorer with slide/collapse */}
         <div className="hidden md:block h-full overflow-hidden transition-all duration-300 ease-out" style={{ width: showExplorer ? '15rem' : '0rem' }}>
           <div className={`h-full transition-transform duration-300 ease-out ${showExplorer ? 'translate-x-0' : '-translate-x-full'}`}>
-            <FileExplorer 
+            <FileExplorer
               className="w-60"
-              files={files} 
-              onFileSelect={navigateToFile} 
+              files={files}
+              onFileSelect={navigateToFile}
               activeFileId={activeFileId}
               toggleFolder={toggleFolder}
             />
@@ -635,10 +655,10 @@ const App: React.FC = () => {
                 <span className="text-xs uppercase tracking-wide text-tokyo-comment">Explorer</span>
                 <button onClick={() => setShowExplorer(false)} className="text-tokyo-comment hover:text-tokyo-fg"><X size={14} /></button>
               </div>
-              <FileExplorer 
+              <FileExplorer
                 className="w-full"
-                files={files} 
-                onFileSelect={(id) => { navigateToFile(id); setShowExplorer(false); }} 
+                files={files}
+                onFileSelect={(id) => { navigateToFile(id); setShowExplorer(false); }}
                 activeFileId={activeFileId}
                 toggleFolder={toggleFolder}
               />
@@ -662,45 +682,45 @@ const App: React.FC = () => {
                   </Suspense>
                 </div>
               ) : activeBuffer ? (
-              <Editor 
-                buffer={activeBuffer} 
-                isActive={true}
-                mode={mode}
-                selection={visualAnchor ? { start: visualAnchor, end: { row: activeBuffer.cursorRow, col: activeBuffer.cursorCol } } : null}
-                onCursorChange={(row, col) => {}}
-                onMouseSelectionChange={(start, end) => {}}
-                onExitVisual={() => { setMode(Mode.NORMAL); setVisualAnchor(null); }}
-              />
-            ) : (
-              <Dashboard onNavigate={navigateToFile} onQuit={() => window.location.href = 'about:blank'} />
-            )} />
+                <Editor
+                  buffer={activeBuffer}
+                  isActive={true}
+                  mode={mode}
+                  selection={visualAnchor ? { start: visualAnchor, end: { row: activeBuffer.cursorRow, col: activeBuffer.cursorCol } } : null}
+                  onCursorChange={(row, col) => { }}
+                  onMouseSelectionChange={(start, end) => { }}
+                  onExitVisual={() => { setMode(Mode.NORMAL); setVisualAnchor(null); }}
+                />
+              ) : (
+                <Dashboard onNavigate={navigateToFile} onQuit={() => window.location.href = 'about:blank'} />
+              )} />
           </Routes>
         </div>
       </div>
 
       {/* Status Line */}
-      <StatusLine 
-        mode={mode} 
-        file={activeBuffer?.title} 
-        cursorRow={activeBuffer?.cursorRow || 0} 
+      <StatusLine
+        mode={mode}
+        file={activeBuffer?.title}
+        cursorRow={activeBuffer?.cursorRow || 0}
         cursorCol={activeBuffer?.cursorCol || 0}
         fileType={activeBuffer?.type || 'N/A'}
         totalLines={activeBuffer ? activeBuffer.content.split('\n').length : 1}
       />
-      
+
       {/* Command Line / Message Bar */}
       <div className="h-8 bg-tokyo-bg text-tokyo-fg flex items-center px-2 border-t border-tokyo-statusline shrink-0">
-         {mode === Mode.COMMAND ? (
-            <div className="flex items-center w-full">
-               <span className="font-bold mr-1">:</span>
-               <span className="text-tokyo-fg">{commandBuffer}</span>
-               <span className="w-2 h-4 bg-tokyo-fg ml-0.5 animate-pulse"></span>
-            </div>
-         ) : notification ? (
-            <span className="text-tokyo-red font-bold">{notification}</span>
-         ) : (
-            <span className="text-tokyo-comment">{activeBuffer ? 'Try vim commands!' : 'Welcome to My Home Page! © 2026 Mirpri'}</span>
-         )}
+        {mode === Mode.COMMAND ? (
+          <div className="flex items-center w-full">
+            <span className="font-bold mr-1">:</span>
+            <span className="text-tokyo-fg">{commandBuffer}</span>
+            <span className="w-2 h-4 bg-tokyo-fg ml-0.5 animate-pulse"></span>
+          </div>
+        ) : notification ? (
+          <span className="text-tokyo-red font-bold">{notification}</span>
+        ) : (
+          <span className="text-tokyo-comment">{activeBuffer ? 'Try vim commands!' : 'Welcome to My Home Page! © 2026 Mirpri'}</span>
+        )}
       </div>
     </div>
   );

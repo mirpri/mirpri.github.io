@@ -11,14 +11,14 @@ interface EditorProps {
   selection?: { start: { row: number; col: number }, end: { row: number; col: number } } | null;
 }
 
-const Editor: React.FC<EditorProps> = ({ buffer, isActive, selection}) => {
+const Editor: React.FC<EditorProps> = ({ buffer, isActive, selection }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeLineRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll logic to keep cursor in view
   useEffect(() => {
     if (isActive && activeLineRef.current) {
-        activeLineRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      activeLineRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [buffer.cursorRow, isActive]);
 
@@ -27,7 +27,7 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, selection}) => {
 
   return (
     <div ref={containerRef} className="h-full overflow-y-auto w-full bg-tokyo-bg font-mono custom-scrollbar relative py-6">
-       <div className="min-h-full pb-10 text-[1.25rem]">
+      <div className="min-h-full pb-10 text-[1.25rem]">
         {lines.map((line, idx) => {
           const isCursorLine = isActive && idx === buffer.cursorRow;
           // Compute selection columns for this line if selection exists
@@ -54,10 +54,10 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, selection}) => {
               selEndCol = Math.max(0, Math.min(end.col, lineLen));
             }
           }
-          
+
           return (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               ref={isCursorLine ? activeLineRef : null}
               className={`flex w-full ${isCursorLine ? 'bg-tokyo-line_nr/30' : ''}`}
             >
@@ -65,12 +65,12 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, selection}) => {
               <div className={`w-12 text-right pr-4 select-none shrink-0 ${isCursorLine ? 'text-tokyo-yellow font-bold' : 'text-tokyo-comment'}`}>
                 {idx + 1}
               </div>
-              
+
               {/* Line Content*/}
               <div className="flex-1 whitespace-pre-wrap pr-4 break-words min-h-[1.5em] mx-auto block max-w-xl xl:max-w-4xl" data-row={idx}>
-                <HighlightLine 
-                  text={line} 
-                  type={buffer.type} 
+                <HighlightLine
+                  text={line}
+                  type={buffer.type}
                   cursorCol={isCursorLine ? buffer.cursorCol : undefined}
                   selStartCol={selStartCol}
                   selEndCol={selEndCol}
@@ -80,23 +80,29 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, selection}) => {
             </div>
           );
         })}
-       </div>
+      </div>
     </div>
   );
 };
 
+// Helper: get char length at index (2 for surrogate pairs / emoji, else 1)
+const charLenAt = (str: string, index: number): number => {
+  const code = str.charCodeAt(index);
+  return (code >= 0xD800 && code <= 0xDBFF && index + 1 < str.length) ? 2 : 1;
+};
+
 // Simple Syntax Highlighter with Cursor Support
 const HighlightLine: React.FC<{ text: string, type: string, cursorCol?: number, selStartCol?: number, selEndCol?: number, basePath?: string }> = ({ text, type, cursorCol, selStartCol, selEndCol, basePath }) => {
-    // If no cursor/selection, render efficiently
-    if (cursorCol === undefined && (selStartCol === undefined || selEndCol === undefined)) {
-      if (type === 'markdown') {
-       return <MarkdownInline text={text} basePath={basePath} />;
-      }
-      return <SyntaxTokens text={text} type={type} basePath={basePath} />;
+  // If no cursor/selection, render efficiently
+  if (cursorCol === undefined && (selStartCol === undefined || selEndCol === undefined)) {
+    if (type === 'markdown') {
+      return <MarkdownInline text={text} basePath={basePath} />;
     }
-  
+    return <SyntaxTokens text={text} type={type} basePath={basePath} />;
+  }
+
   const hasCursor = cursorCol !== undefined && cursorCol >= 0;
-  
+
   const tokens = tokenize(text, type);
   let currentLength = 0;
   const parts: React.ReactNode[] = [];
@@ -124,9 +130,11 @@ const HighlightLine: React.FC<{ text: string, type: string, cursorCol?: number, 
       // If cursor also inside, and not in selected part, handle char highlight without animation
       const pushSegment = (textSeg: string, className: string, offsetStart: number) => {
         if (cursorInsideToken && cursorIndexRel >= offsetStart && cursorIndexRel < offsetStart + textSeg.length && !hasSelection) {
-          const pre = textSeg.slice(0, cursorIndexRel - offsetStart);
-          const ch = textSeg[cursorIndexRel - offsetStart];
-          const post = textSeg.slice(cursorIndexRel - offsetStart + 1);
+          const ri = cursorIndexRel - offsetStart;
+          const cLen = charLenAt(textSeg, ri);
+          const pre = textSeg.slice(0, ri);
+          const ch = textSeg.slice(ri, ri + cLen);
+          const post = textSeg.slice(ri + cLen);
           parts.push(<span key={`${i}-pre`} className={className}>{pre}</span>);
           parts.push(<span key={`${i}-cur`} className={`${className} bg-tokyo-fg text-tokyo-bg_dark font-bold`}>{ch}</span>);
           parts.push(<span key={`${i}-post`} className={className}>{post}</span>);
@@ -151,9 +159,10 @@ const HighlightLine: React.FC<{ text: string, type: string, cursorCol?: number, 
     } else if (cursorInsideToken && !hasSelection) {
       // No selection, highlight cursor char
       const relIndex = cursorIndexRel;
+      const cLen = charLenAt(token.text, relIndex);
       const pre = token.text.slice(0, relIndex);
-      const ch = token.text[relIndex];
-      const post = token.text.slice(relIndex + 1);
+      const ch = token.text.slice(relIndex, relIndex + cLen);
+      const post = token.text.slice(relIndex + cLen);
       parts.push(<span key={`${i}-pre`} className={token.className}>{pre}</span>);
       parts.push(
         <span
@@ -194,24 +203,24 @@ const tokenize = (text: string, type: string): { text: string, className: string
 
 // Component for non-active lines (faster)
 const SyntaxTokens: React.FC<{ text: string, type: string, basePath?: string }> = ({ text, type, basePath }) => {
-   if (type === 'markdown') {
-     return <MarkdownInline text={text} basePath={basePath} />;
-   }
-   const tokens = tokenize(text, type);
-   return (
-      <>
-        {tokens.map((t, i) => <span key={i} className={t.className}>{t.text}</span>)}
-      </>
-   );
+  if (type === 'markdown') {
+    return <MarkdownInline text={text} basePath={basePath} />;
+  }
+  const tokens = tokenize(text, type);
+  return (
+    <>
+      {tokens.map((t, i) => <span key={i} className={t.className}>{t.text}</span>)}
+    </>
+  );
 };
 
-const MarkdownInline: React.FC<{ text: string, basePath?: string }> = ({ text, basePath }) => (
+const MarkdownInline: React.FC<{ text: string, basePath?: string }> = React.memo(({ text, basePath }) => (
   <ReactMarkdown
     remarkPlugins={[remarkGfm]}
     rehypePlugins={[rehypeRaw]}
     components={{
       p: ({ children }) => <span className="text-tokyo-fg font-sans max-w-lg">{children}</span>,
-      a: ({ children, href, style}) => <a href={href} className="px-1.5 text-tokyo-cyan hover:text-tokyo-orange border border-tokyo-cyan hover:border-tokyo-orange rounded-[100px] font-mono text-base hover:rounded-[0px] transition-all duration-300" style={style}>{children}</a>,
+      a: ({ children, href, style }) => <a href={href} className="px-1.5 text-tokyo-cyan hover:text-tokyo-orange border border-tokyo-cyan hover:border-tokyo-orange rounded-[100px] font-mono text-base hover:rounded-[0px] transition-all duration-300" style={style}>{children}</a>,
       strong: ({ children }) => <span className="font-bold text-tokyo-fg">{children}</span>,
       em: ({ children }) => <span className="italic text-tokyo-fg">{children}</span>,
       code: ({ children }) => <code className="bg-tokyo-line_nr text-tokyo-orange px-1 rounded" style={{ fontSize: '0.9em' }}>{children}</code>,
@@ -230,6 +239,6 @@ const MarkdownInline: React.FC<{ text: string, basePath?: string }> = ({ text, b
   >
     {text}
   </ReactMarkdown>
-);
+));
 
 export default Editor;

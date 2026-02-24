@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --color-tokyo-bg: #1a1b26;
+  --color-tokyo-bg_dark: #16161e;
+  --color-tokyo-fg: #c0caf5;
+  --color-tokyo-comment: #565f89;
+  --color-tokyo-cyan: #7dcfff;
+  --color-tokyo-blue: #7aa2f7;
+  --color-tokyo-purple: #bb9af7;
+  --color-tokyo-green: #9ece6a;
+  --color-tokyo-red: #f7768e;
+  --color-tokyo-yellow: #e0af68;
+  --color-tokyo-orange: #ff9e64;
+  --color-tokyo-selection: #283457;
+  --color-tokyo-statusline: #1f2335;
+  --color-tokyo-line_nr: #3b4261;
+
+  --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
