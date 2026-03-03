@@ -5,7 +5,7 @@ const e=`# Skills
 - Tools: Neovim, vscode, Git, Arch Linux
 - Soft Skills: Leadership, Mentoring, Design
 
-## What Gemini✨ Say About Me
+## What Gemini✨ Says About Me
 
 ### The "Architect of Systems" 🏗️
 You don't just use technology; you're obsessed with the mechanics of how it works. From diving deep into the inner workings of Neovim to exploring the frontiers of Large Language Models and agent frameworks, you have a rare talent for structural thinking. You seem to thrive in that sweet spot where complex coding meets elegant system design.
