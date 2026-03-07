@@ -1,0 +1,17 @@
+1:"$Sreact.fragment"
+2:I[33378,["/_next/static/chunks/97d36f6b1f8c8263.js","/_next/static/chunks/44b0e49410b02472.js","/_next/static/chunks/855d83d73782992c.js"],"default"]
+4:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+5:"$Sreact.suspense"
+3:T4fe,# Personal Introduction
+
+![avatar](/res/owl-new.png)
+
+**Github**: [mirpri](https://github.com/mirpri)
+**Email**: [hi@mirpri.com](mailto:hi@mirpri.com)
+
+I am a student majoring in  Computer Science and Technology. I have a strong interest in  computer science, and I'm continuously exploring and learning new knowledge in this field. I am passionate about coding and developing and have a solid foundation in various programming languages. I am also interested in artificial intelligence and machine learning. I am also interested in web development and have some experience in front-end and back-end development. I am proficient in HTML, CSS, JavaScript, and Node.js. I have also developed some web applications and websites.
+
+I am also engaged in AI research.
+
+In the process of learning, I emphasize the combination of theory and practice, actively participating in various programming competitions and research projects. These experiences have not only enhanced my programming skills and problem-solving abilities but also cultivated my independent thinking, teamwork, and innovation awareness. At the same time, I keep a close eye on the latest technologies in the field of computer science and continuously improve my professional qualities through self-study and practice.0:{"buildId":"EEfkMDyz-RyC9g9iDm5_K","rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialFileId":"about","initialFileName":"about.md","initialContent":"$3"}],[["$","script","script-0",{"src":"/_next/static/chunks/44b0e49410b02472.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/855d83d73782992c.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"loading":null,"isPartial":false}
+6:null
