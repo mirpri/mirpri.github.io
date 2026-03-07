@@ -1,6 +1,6 @@
 # Personal Introduction
 
-![avatar](./res/owl-new.png)
+![avatar](/res/owl-new.png)
 
 **Github**: [mirpri](https://github.com/mirpri)
 **Email**: [hi@mirpri.com](mailto:hi@mirpri.com)

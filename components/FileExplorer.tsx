@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { FileNode } from '../types';
 import { Folder, FileCode, FileText, ChevronRight, ChevronDown, FileJson } from 'lucide-react';
 
@@ -19,26 +20,16 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect, active
       const paddingLeft = depth * 12 + 10;
 
       let Icon = FileText;
-      if (isFolder) Icon = Folder;
-      else if (node.extension === 'ts' || node.extension === 'tsx') Icon = FileCode;
+      if (node.id === 'src' || node.name === 'src') {
+        Icon = Folder;
+      } else if (isFolder) {
+        Icon = Folder;
+      } else if (node.extension === 'ts' || node.extension === 'tsx') Icon = FileCode;
+      else if (node.extension === 'json') Icon = FileJson;
       else Icon = FileText;
 
-      return (
-        <div key={node.id}>
-          <div
-            className={`flex items-center py-1 cursor-pointer hover:bg-tokyo-line_nr/50 select-none ${
-              isActive ? 'bg-tokyo-selection text-tokyo-fg' : 'text-tokyo-comment'
-            }`}
-            style={{ paddingLeft: `${paddingLeft}px` }}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (isFolder) {
-                toggleFolder(node.id);
-              } else {
-                onFileSelect(node.id);
-              }
-            }}
-          >
+      const content = (
+        <>
             {isFolder && (
               <span className="mr-1">
                 {node.isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
@@ -55,7 +46,39 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect, active
             <span className={`text-sm font-mono ${isActive ? 'font-bold' : ''}`}>
               {node.name}
             </span>
-          </div>
+        </>
+      );
+
+      const commonClasses = `flex items-center py-1 cursor-pointer hover:bg-tokyo-line_nr/50 select-none ${
+        isActive ? 'bg-tokyo-selection text-tokyo-fg' : 'text-tokyo-comment'
+      }`;
+
+      return (
+        <div key={node.id}>
+          {isFolder ? (
+            <div
+              className={commonClasses}
+              style={{ paddingLeft: `${paddingLeft}px` }}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFolder(node.id);
+              }}
+            >
+              {content}
+            </div>
+          ) : (
+            <Link
+              href={`/${node.id}`}
+              className={commonClasses + ' block'}
+              style={{ paddingLeft: `${paddingLeft}px` }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onFileSelect(node.id);
+              }}
+            >
+              {content}
+            </Link>
+          )}
           
           {isFolder && node.isOpen && node.children && (
              <div>

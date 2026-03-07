@@ -9,7 +9,7 @@ What you’ll find here:
 - 🛠️ Development best practices
 - 🧠 Software I favor and recommended setups
 
-🔗 Visit: https://mirpri.github.io/mirnotes
+🔗 Visit: https://mirpri.com/mirnotes
 
 # My Blog
 *A space for thinking out loud.*

@@ -25,12 +25,12 @@ For a detailed overview of the game, including features and enhancements, visit 
 ## Word Strand
 Word Strand is a fun and challenging word puzzle game that tests your vocabulary and problem-solving skills. Link words together in a strand and solve puzzles to unlock new levels. It’s a great way to relax and engage your brain while expanding your lexicon.
 
-Start playing now and immerse yourself in this addictive word game by clicking on [here](https://mirpri.github.io/#/games/wordstrand).
+Start playing now and immerse yourself in this addictive word game by clicking on [here](https://mirpri.com/games/wordstrand).
 
 ## MirNotes
 This document is a collection of my personal notes and observations as I dive into learning the C programming language and more. As I continue to study and experiment with coding, I record newly discovered features, tips, and techniques that I find particularly useful. Whether you're a beginner or looking to refine your coding skills, these notes might offer some valuable insights.
 
-To explore my ongoing learning journey, access the full notes [here](https://mirpri.github.io/mirnotes).
+To explore my ongoing learning journey, access the full notes [here](https://mirpri.com/mirnotes).
 
 ## Watth (archived)
 Watth is an innovative math tool designed to help you effortlessly divide numbers. 

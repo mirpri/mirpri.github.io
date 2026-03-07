@@ -1,13 +1,24 @@
 import { create } from 'zustand';
-import { Mode, Buffer } from './types';
+import { Mode, Buffer, FileNode } from './types';
 
 interface EditorState {
   mode: Mode;
   buffers: Buffer[];
   activeFileId: string | null;
+  loadTime: number | null;
+  files: FileNode[];
+  showExplorer: boolean;
+  commandBuffer: string;
+  notification: string | null;
 
   // Actions
   setMode: (mode: Mode) => void;
+  setLoadTime: (time: number) => void;
+  setFiles: (files: FileNode[]) => void;
+  setShowExplorer: (show: boolean) => void;
+  setCommandBuffer: (cmd: string) => void;
+  setNotification: (msg: string | null) => void;
+  toggleFolder: (folderId: string) => void;
   openFile: (fileId: string, content: string, name: string, type?: Buffer['type']) => void;
   closeFile: (fileId: string) => void;
   setActiveFile: (fileId: string | null) => void;
@@ -19,9 +30,36 @@ interface EditorState {
 export const useEditorStore = create<EditorState>((set) => ({
   mode: Mode.NORMAL,
   buffers: [],
+  files: [],
   activeFileId: null,
+  loadTime: null,
+  showExplorer: true,
+  commandBuffer: '',
+  notification: null,
 
   setMode: (mode) => set({ mode }),
+  setLoadTime: (time) => set({ loadTime: time }),
+  setFiles: (files) => set({ files }),
+  setShowExplorer: (show) => set({ showExplorer: show }),
+  setCommandBuffer: (cmd) => set({ commandBuffer: cmd }),
+  setNotification: (msg) => set({ notification: msg }),
+  toggleFolder: (folderId) => set((state) => {
+    const newFiles = [...state.files];
+    const toggleNode = (nodes: FileNode[]) => {
+      for (const node of nodes) {
+        if (node.id === folderId) {
+          node.isOpen = !node.isOpen;
+          return true;
+        }
+        if (node.children) {
+          if (toggleNode(node.children)) return true;
+        }
+      }
+      return false;
+    };
+    toggleNode(newFiles);
+    return { files: newFiles };
+  }),
 
   openFile: (fileId, content, name, type = 'markdown') => 
     set((state) => {

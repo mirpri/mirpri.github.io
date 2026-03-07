@@ -214,6 +214,23 @@ const SyntaxTokens: React.FC<{ text: string, type: string, basePath?: string }> 
   );
 };
 
+const ImageWithLoading: React.FC<{ src: string, alt: string, title: string, style?: React.CSSProperties }> = ({ src, alt, title, style }) => {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <>
+      {!loaded && <div className="inline-block p-2 hover:rounded-none border border-tokyo-comment text-tokyo-comment font-medium animate-pulse transition-all duration-300 text-sm">loading...</div>}
+      <img
+        src={src}
+        alt={alt}
+        className="inline-block max-h-80 rounded-3xl p-0.5 hover:rounded-none border border-tokyo-comment transition-all duration-300"
+        style={{ ...style, display: loaded ? 'inline-block' : 'none' }}
+        title={title}
+        onLoad={() => setLoaded(true)}
+      />
+    </>
+  );
+};
+
 const MarkdownInline: React.FC<{ text: string, basePath?: string }> = React.memo(({ text, basePath }) => (
   <ReactMarkdown
     remarkPlugins={[remarkGfm]}
@@ -232,8 +249,8 @@ const MarkdownInline: React.FC<{ text: string, basePath?: string }> = React.memo
       blockquote: ({ children }) => <blockquote className="border-l-2 border-tokyo-comment/40 pl-3 text-tokyo-comment font-sans italic">{children}</blockquote>,
       hr: () => <hr className="border-tokyo-comment/30 my-2" />,
       img: ({ src, alt, style }) => {
-        const resolved = resolveMarkdownAsset(src || '', basePath);
-        return <img src={resolved} alt={alt || ''} className="inline-block max-h-80 rounded-3xl p-0.5 hover:rounded-none border border-tokyo-comment transition-all duration-300" style={style} title={alt || ''} />;
+        const resolved = resolveMarkdownAsset(String(src || ''), basePath);
+        return <ImageWithLoading src={resolved} alt={String(alt || '')} style={style as React.CSSProperties} title={String(alt || '')} />;
       }
     }}
   >

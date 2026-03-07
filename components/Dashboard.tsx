@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { FileText, Code, Cpu, Gamepad2, Zap, Book, icons, Compass} from 'lucide-react';
+import React, { use, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { FileText, Code, Cpu, Gamepad2, Zap, Book, icons, Compass } from 'lucide-react';
 // import { useEditorStore } from '../store'; // If using store directly, but props is fine too
 
 interface DashboardProps {
   onNavigate: (fileId: string) => void;
+  loadTime?: number;
+  onQuit?: () => void;
 }
 
 const ASCII_ART = `
@@ -36,31 +39,31 @@ const AsciiArt = () => {
     const maxWidth = Math.max(...initialLines.map(l => l.length));
     const cycle = maxWidth + 40; // Allow time for full destruction + pause
     let frame = 0;
-    
+
     const interval = setInterval(() => {
       frame++;
       // Wave position: -20 to maxWidth + 20
       const pos = (frame % cycle) - 20;
       const cycleIndex = Math.floor(frame / cycle);
       const isRecovery = cycleIndex % 2 !== 0; // Odd cycles = recovery
-      
+
       setArt((prevArt) => {
         const lines = prevArt.split('\n');
-        
+
         return lines.map((line, y) => {
           if (!line) return line;
 
           return line.split('').map((char, x) => {
             if (char === ' ' || char === '\n') return char;
-            
+
             // Define block wave window
             const dist = x - pos;
             const isInWave = dist >= 0 && dist < 12;
-            
+
             if (isInWave) {
-               return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+              return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
             }
-            
+
             if (isRecovery && dist < 0) {
               return initialLines[y][x];
             }
@@ -80,7 +83,7 @@ const AsciiArt = () => {
   );
 };
 
-const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
+const Dashboard: React.FC<DashboardProps> = ({ onNavigate, loadTime }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
@@ -118,14 +121,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         {MENU_ITEMS.map((item, index) => {
           const Icon = item.icon;
           const isSelected = index === selectedIndex;
-          
+
           return (
-            <div
+            <Link
               key={item.label}
+              href={`/${item.fileId}`}
               onClick={() => handleSelect(index)}
-              className={`flex items-center px-4 py-2 cursor-pointer transition-all duration-200 rounded-md group ${
-                isSelected ? 'bg-tokyo-line_nr' : 'hover:bg-tokyo-bg_dark'
-              }`}
+              onMouseEnter={() => setSelectedIndex(index)}
+              className={`flex items-center px-4 py-2 cursor-pointer transition-all duration-200 rounded-md group ${isSelected ? 'bg-tokyo-line_nr' : 'hover:bg-tokyo-bg_dark'
+                }`}
             >
               <div className={`w-8 flex justify-center ${isSelected ? 'text-tokyo-cyan' : 'text-tokyo-comment'}`}>
                 <Icon size={18} />
@@ -139,13 +143,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               <span className={`ml-4 text-xs font-mono px-2 py-0.5 rounded ${isSelected ? 'bg-tokyo-blue text-tokyo-bg' : 'text-tokyo-comment'}`}>
                 {item.key}
               </span>
-            </div>
+            </Link>
           );
         })}
       </div>
 
-      <div className="mt-4 text-tokyo-comment text-sm">
-        <p className="flex items-center justify-center gap-2"><Zap size={15} /> Loaded in {Math.ceil(Math.random()*100)}ms</p>
+      <div className="mt-4 text-tokyo-comment text-sm min-h-[20px]">
+        {loadTime !== null && (
+          <p className="flex items-center justify-center gap-2"><Zap size={15} /> Loaded in {loadTime}ms</p>
+        )}
       </div>
     </div>
   );
