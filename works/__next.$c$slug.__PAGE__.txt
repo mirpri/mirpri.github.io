@@ -2,7 +2,7 @@
 2:I[33378,["/_next/static/chunks/97d36f6b1f8c8263.js","/_next/static/chunks/44b0e49410b02472.js","/_next/static/chunks/855d83d73782992c.js"],"default"]
 7:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
 8:"$Sreact.suspense"
-3:Teaf,# My Works
+3:Tea1,# My Works
 
 ## Mirpass
 Mirpass is a flexible OAuth system offering both Authorization Code Flow and Device Code Flow, making secure authentication simple for any application. Effortlessly integrate Mirpass into your project and enhance your users' login experience. [Sign up](https://pass.mirpri.com/)
@@ -29,12 +29,12 @@ For a detailed overview of the game, including features and enhancements, visit 
 ## Word Strand
 Word Strand is a fun and challenging word puzzle game that tests your vocabulary and problem-solving skills. Link words together in a strand and solve puzzles to unlock new levels. It’s a great way to relax and engage your brain while expanding your lexicon.
 
-Start playing now and immerse yourself in this addictive word game by clicking on [here](https://mirpri.github.io/#/games/wordstrand).
+Start playing now and immerse yourself in this addictive word game by clicking on [here](https://mirpri.com/games/wordstrand).
 
 ## MirNotes
 This document is a collection of my personal notes and observations as I dive into learning the C programming language and more. As I continue to study and experiment with coding, I record newly discovered features, tips, and techniques that I find particularly useful. Whether you're a beginner or looking to refine your coding skills, these notes might offer some valuable insights.
 
-To explore my ongoing learning journey, access the full notes [here](https://mirpri.github.io/mirnotes).
+To explore my ongoing learning journey, access the full notes [here](https://mirpri.com/mirnotes).
 
 ## Watth (archived)
 Watth is an innovative math tool designed to help you effortlessly divide numbers. 
@@ -49,7 +49,7 @@ Function Grapher is a powerful tool that allows you to draw and visualize mathem
 ![screenshot](https://user-images.githubusercontent.com/71537369/200215903-78ba039f-de53-4c70-8507-6700d80bb7d5.png)
 
 Find more detailed information about the tool, including usage instructions and code, on [GitHub](https://github.com/Mirpri/function-grapher).
-0:{"buildId":"EEfkMDyz-RyC9g9iDm5_K","rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialFileId":"works","initialFileName":"works.md","initialContent":"$3"}],["$L4","$L5"],"$L6"]}],"loading":null,"isPartial":false}
+0:{"buildId":"PV2soRAf2S3b_2mnJKQlk","rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialFileId":"works","initialFileName":"works.md","initialContent":"$3"}],["$L4","$L5"],"$L6"]}],"loading":null,"isPartial":false}
 4:["$","script","script-0",{"src":"/_next/static/chunks/44b0e49410b02472.js","async":true}]
 5:["$","script","script-1",{"src":"/_next/static/chunks/855d83d73782992c.js","async":true}]
 6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
