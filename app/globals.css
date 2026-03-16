@@ -18,3 +18,13 @@
 
   --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 }
+
+.hide-below-sm {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .hide-below-sm {
+    display: block;
+  }
+}

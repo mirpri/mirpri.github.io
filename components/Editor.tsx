@@ -27,7 +27,7 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, selection }) => {
 
   return (
     <div ref={containerRef} className="h-full overflow-y-auto w-full bg-tokyo-bg font-mono custom-scrollbar relative py-6">
-      <div className="min-h-full pb-10 text-[1.25rem]">
+      <div className="min-h-full pb-10 sm:text-[1.25rem]">
         {lines.map((line, idx) => {
           const isCursorLine = isActive && idx === buffer.cursorRow;
           // Compute selection columns for this line if selection exists
@@ -62,12 +62,12 @@ const Editor: React.FC<EditorProps> = ({ buffer, isActive, selection }) => {
               className={`flex w-full ${isCursorLine ? 'bg-tokyo-line_nr/30' : ''}`}
             >
               {/* Line Number */}
-              <div className={`w-12 text-right pr-4 select-none shrink-0 ${isCursorLine ? 'text-tokyo-yellow font-bold' : 'text-tokyo-comment'}`}>
+              <div className={`hide-below-sm w-12 text-right pr-4 select-none shrink-0 ${isCursorLine ? 'text-tokyo-yellow font-bold' : 'text-tokyo-comment'}`}>
                 {idx + 1}
               </div>
 
               {/* Line Content*/}
-              <div className="flex-1 whitespace-pre-wrap pr-4 break-words min-h-[1.5em] mx-auto block max-w-xl xl:max-w-4xl" data-row={idx}>
+              <div className="flex-1 whitespace-pre-wrap px-4 break-words min-h-[1.5em] mx-auto block max-w-xl xl:max-w-4xl" data-row={idx}>
                 <HighlightLine
                   text={line}
                   type={buffer.type}

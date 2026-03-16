@@ -137,7 +137,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, loadTime }) => {
               <span className={`font-bold mr-4 ${isSelected ? 'text-tokyo-fg' : 'text-tokyo-comment group-hover:text-tokyo-fg'}`}>
                 {item.label}
               </span>
-              <span className="text-tokyo-comment text-sm flex-1 text-right italic opacity-60">
+              <span className="text-tokyo-comment text-xs sm:text-sm flex-1 text-right italic opacity-60">
                 {item.desc}
               </span>
               <span className={`ml-4 text-xs font-mono px-2 py-0.5 rounded ${isSelected ? 'bg-tokyo-blue text-tokyo-bg' : 'text-tokyo-comment'}`}>
