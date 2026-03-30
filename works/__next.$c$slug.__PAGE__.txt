@@ -49,7 +49,7 @@ Function Grapher is a powerful tool that allows you to draw and visualize mathem
 ![screenshot](https://user-images.githubusercontent.com/71537369/200215903-78ba039f-de53-4c70-8507-6700d80bb7d5.png)
 
 Find more detailed information about the tool, including usage instructions and code, on [GitHub](https://github.com/Mirpri/function-grapher).
-0:{"buildId":"12awuP7HCpFRKRbRsFx2k","rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialFileId":"works","initialFileName":"works.md","initialContent":"$3"}],["$L4","$L5","$L6"],"$L7"]}],"loading":null,"isPartial":false}
+0:{"buildId":"o7WCNrNiiYMdeIBj7dUGH","rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialFileId":"works","initialFileName":"works.md","initialContent":"$3"}],["$L4","$L5","$L6"],"$L7"]}],"loading":null,"isPartial":false}
 4:["$","script","script-0",{"src":"/_next/static/chunks/f1bf806d770f3a5c.js","async":true}]
 5:["$","script","script-1",{"src":"/_next/static/chunks/d07e529c6b0385a6.js","async":true}]
 6:["$","script","script-2",{"src":"/_next/static/chunks/662e31ad99e88655.js","async":true}]
