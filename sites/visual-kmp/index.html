@@ -1,0 +1,47 @@
+<!-- kmp ui -->
+<!DOCTYPE html>
+<head>
+    <title>KMP</title>
+    <script src="./kmp-v.js"></script>
+</head>
+
+<body>
+    <label for="textInput">Text:</label>
+    <br>
+    <textarea type="text" id="textInput" placeholder="Enter text to search from" >absbababbabhdhbabaabaabababbbabbaabww</textarea>
+    <br>
+
+    <label for="patternInput">Pattern:</label>
+    <br>
+    <textarea type="text" id="patternInput" placeholder="Enter text to search for" >abababb</textarea>
+
+    <br>
+    <button id="searchButton" onclick="search()">Search</button>
+    
+    <p id="display"></p>
+
+    <table id="lspTable">        
+    </table>
+</body>
+<script>
+    function search(){
+        var text = document.getElementById("textInput").value;
+        var pattern = document.getElementById("patternInput").value;
+        kmpv(text,pattern);
+    }
+</script>
+<style>
+    .matchhighlight{
+        background-color: #1aff00;
+        color: #005500;
+    }
+    .highlight{
+        background-color: #f2ff62;
+        color: #000000;
+        border: 1px solid #000000;
+    }
+    .currentmatch{
+        background-color: #f2ff62;
+        color: #ff0000;
+    }
+</style>
