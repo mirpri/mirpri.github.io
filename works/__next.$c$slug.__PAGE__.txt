@@ -1,7 +1,7 @@
 1:"$Sreact.fragment"
-2:I[33378,["/_next/static/chunks/97d36f6b1f8c8263.js","/_next/static/chunks/f1bf806d770f3a5c.js","/_next/static/chunks/d07e529c6b0385a6.js","/_next/static/chunks/662e31ad99e88655.js"],"default"]
-8:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
-9:"$Sreact.suspense"
+2:I[33378,["/_next/static/chunks/2_srzjuhek-xn.js","/_next/static/chunks/2eq4iec-v8w4s.js","/_next/static/chunks/440wxcn8ky0or.js","/_next/static/chunks/0gjydvitdmk7h.js"],"default"]
+7:I[35073,["/_next/static/chunks/2_srzjuhek-xn.js","/_next/static/chunks/2eq4iec-v8w4s.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
 3:Tea1,# My Works
 
 ## Mirpass
@@ -49,9 +49,8 @@ Function Grapher is a powerful tool that allows you to draw and visualize mathem
 ![screenshot](https://user-images.githubusercontent.com/71537369/200215903-78ba039f-de53-4c70-8507-6700d80bb7d5.png)
 
 Find more detailed information about the tool, including usage instructions and code, on [GitHub](https://github.com/Mirpri/function-grapher).
-0:{"buildId":"lNNGkc7NDLQrEBy2sgzFv","rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialFileId":"works","initialFileName":"works.md","initialContent":"$3"}],["$L4","$L5","$L6"],"$L7"]}],"loading":null,"isPartial":false}
-4:["$","script","script-0",{"src":"/_next/static/chunks/f1bf806d770f3a5c.js","async":true}]
-5:["$","script","script-1",{"src":"/_next/static/chunks/d07e529c6b0385a6.js","async":true}]
-6:["$","script","script-2",{"src":"/_next/static/chunks/662e31ad99e88655.js","async":true}]
-7:["$","$L8",null,{"children":["$","$9",null,{"name":"Next.MetadataOutlet","children":"$@a"}]}]
-a:null
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialFileId":"works","initialFileName":"works.md","initialContent":"$3"}],["$L4","$L5"],"$L6"]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"WQ58hwj2LhY5y_pTVIy3U"}
+4:["$","script","script-0",{"src":"/_next/static/chunks/440wxcn8ky0or.js","async":true}]
+5:["$","script","script-1",{"src":"/_next/static/chunks/0gjydvitdmk7h.js","async":true}]
+6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
+9:null
