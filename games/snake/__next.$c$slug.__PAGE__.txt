@@ -2,5 +2,5 @@
 2:I[33378,["/_next/static/chunks/2_srzjuhek-xn.js","/_next/static/chunks/2eq4iec-v8w4s.js","/_next/static/chunks/440wxcn8ky0or.js","/_next/static/chunks/0gjydvitdmk7h.js"],"default"]
 3:I[35073,["/_next/static/chunks/2_srzjuhek-xn.js","/_next/static/chunks/2eq4iec-v8w4s.js"],"OutletBoundary"]
 4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialFileId":"games/snake","initialFileName":"snake.tsx","initialContent":"React Component Rendering..."}],[["$","script","script-0",{"src":"/_next/static/chunks/440wxcn8ky0or.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/0gjydvitdmk7h.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"WQ58hwj2LhY5y_pTVIy3U"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialFileId":"games/snake","initialFileName":"snake.tsx","initialContent":"React Component Rendering..."}],[["$","script","script-0",{"src":"/_next/static/chunks/440wxcn8ky0or.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/0gjydvitdmk7h.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"KMGqwRHFLoKYv2dh4XkNq"}
 5:null
