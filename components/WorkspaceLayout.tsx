@@ -45,7 +45,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
             setFiles(tree);
         } else if (activeFileId) {
              // If activeFileId changes, ensure folder is expanded
-             // optimization: only if not already expanded? 
+             // optimization: only if not already expanded?
              // for now, just ensure it's expanded in the store
              // we need to mutate a copy
             const tree = JSON.parse(JSON.stringify(files));
@@ -54,7 +54,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
         }
         setFilesReady(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeFileId]); 
+    }, [activeFileId]);
 
     // Window resize handler
     useEffect(() => {
@@ -98,7 +98,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
             }
         }
     };
-    
+
     // Command Execution Logic
     const closeBuffer = () => {
         setMode(Mode.NORMAL);
