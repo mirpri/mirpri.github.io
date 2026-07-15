@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className="antialiased overflow-hidden bg-tokyo-bg text-tokyo-fg font-mono">
         {/* Google Analytics */}
         <Script
@@ -56,9 +56,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         {/* Mirpass OAuth */}
         <Script
-          src="https://pass.mirpri.com/mipass-v1.min.js"
+          src="https://pass.mirpri.com/mirpass-v1.min.js"
           data-app-id="bONtCF1Odtd1ugdtNlsWE"
-          data-theme="transparent-dark"
+          data-theme="dark"
           data-appearance="both"
           data-redirect-uri="https://mirpri.com"
           strategy="afterInteractive"

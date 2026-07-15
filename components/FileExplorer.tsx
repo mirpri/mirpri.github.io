@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { FileNode } from '../types';
-import { Folder, FileCode, FileText, ChevronRight, ChevronDown, FileJson } from 'lucide-react';
+import { Folder, FileCode, FileText, ChevronRight, FileJson } from 'lucide-react';
 
 interface FileExplorerProps {
   files: FileNode[];
@@ -32,7 +32,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect, active
         <>
             {isFolder && (
               <span className="mr-1">
-                {node.isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                <ChevronRight size={14} className={`transition-transform duration-200 ${node.isOpen ? 'rotate-90' : ''}`} />
               </span>
             )}
             {!isFolder && <span className="w-4 mr-1"></span>}
@@ -49,8 +49,10 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect, active
         </>
       );
 
-      const commonClasses = `flex items-center py-1 cursor-pointer hover:bg-tokyo-line_nr/50 select-none ${
-        isActive ? 'bg-tokyo-selection text-tokyo-fg' : 'text-tokyo-comment'
+      const commonClasses = `relative flex items-center py-1 cursor-pointer hover:bg-tokyo-line_nr/50 hover:text-tokyo-fg select-none transition-colors duration-150 ${
+        isActive
+          ? 'bg-tokyo-selection text-tokyo-fg before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[2px] before:bg-tokyo-blue'
+          : 'text-tokyo-comment'
       }`;
 
       return (

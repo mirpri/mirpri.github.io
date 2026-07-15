@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ExternalLink, Github, Twitter, Linkedin, Mail, Globe, Code, Terminal, Youtube, HomeIcon, PenTool, KeyRound, School2, Notebook, Dog } from 'lucide-react';
+import { Github, Mail, HomeIcon, PenTool, KeyRound, School2, Notebook, Dog, Share2 } from 'lucide-react';
 
 interface SpeedDialCategory {
   title: string;
@@ -74,9 +74,9 @@ const SPEED_DIAL_DATA: SpeedDialCategory[] = [
         color: 'text-tokyo-green'
       },
       {
-        id: 'mirnote',
-        label: 'Mirnote',
-        url: 'https://mirpri.com/mirnote',
+        id: 'mirnotes',
+        label: 'Mirnotes',
+        url: 'https://mirpri.com/mirnotes',
         icon: Notebook,
         description: 'My learning journal',
         color: 'text-tokyo-red'
@@ -88,6 +88,14 @@ const SPEED_DIAL_DATA: SpeedDialCategory[] = [
         icon: Dog,
         description: 'AI-powered workout companion',
         color: 'text-tokyo-orange'
+      },
+      {
+        id: 'mirshare',
+        label: 'Mirshare',
+        url: 'https://share.mirpri.com',
+        icon: Share2,
+        description: 'File sharing service',
+        color: 'text-tokyo-purple'
       }
     ]
   }
@@ -170,20 +178,20 @@ const SpeedDial: React.FC = () => {
   }, [selectedIndex, cols]); // Add cols dependency
 
   return (
-    <div className="flex flex-col items-center min-h-full py-12 px-8 max-w-4xl mx-auto w-full">
-      <h1 className="text-3xl font-bold text-tokyo-purple mb-2 font-mono">
-        <span className="text-tokyo-cyan">~</span>/speed-dial
+    <div className="flex flex-col items-center min-h-full py-12 px-8 max-w-4xl mx-auto w-full custom-scrollbar">
+      <h1 className="text-3xl font-bold text-tokyo-purple mb-2 font-mono animate-fade-in-up" style={{ animationDelay: '40ms' }}>
+        SpeedDial
       </h1>
-      <p className="text-tokyo-comment mb-6 font-mono text-sm">
+      <p className="text-tokyo-comment mb-6 font-mono text-sm animate-fade-in-up" style={{ animationDelay: '110ms' }}>
         Quick access links. Use <span className="text-tokyo-fg font-bold">h/j/k/l</span> to navigate.
       </p>
 
       {/* Render grouped items from nested data */}
       {SPEED_DIAL_DATA.map((category, catIndex) => {
         return (
-          <div key={category.title} className="w-full mb-8">
-            <h2 className="text-xl font-bold text-tokyo-cyan mb-4 border-b border-tokyo-statusline pb-2 w-full font-mono">
-              {category.title}
+          <div key={category.title} className="w-full mb-8 animate-fade-in-up" style={{ animationDelay: `${catIndex * 90 + 160}ms` }}>
+            <h2 className="text-xl font-bold text-tokyo-cyan mb-4 border-b border-tokyo-statusline pb-2 w-full font-mono flex items-center gap-2">
+              <span className="text-tokyo-comment">#</span>{category.title}
             </h2>
             <div
               className="grid gap-4 w-full"
@@ -204,30 +212,30 @@ const SpeedDial: React.FC = () => {
                     target={item.url.startsWith('http') || item.url.startsWith('mailto') ? '_blank' : undefined}
                     onMouseEnter={() => setSelectedIndex(originalIndex)}
                     className={`
-                      relative flex items-center p-4 rounded-md border transition-all duration-200 cursor-pointer group
+                      relative flex items-center overflow-hidden p-4 rounded-md border transition-all duration-200 cursor-pointer group
                       ${isSelected
-                        ? 'border-tokyo-purple bg-tokyo-bg_dark translate-x-1 shadow-lg'
-                        : 'border-tokyo-statusline bg-transparent hover:border-tokyo-fg/30'
+                        ? 'border-tokyo-purple bg-tokyo-bg_dark translate-x-1 '
+                        : 'border-tokyo-statusline bg-transparent hover:border-tokyo-fg/30 hover:-translate-y-0.5'
                       }
                     `}
                     onClick={(e) => {
                          // Let Links handle navigation, but can still block if needed
-                         // handleSelect(originalIndex); 
+                         // handleSelect(originalIndex);
                     }}
                   >
                     {/* Selection Marker */}
-                    {isSelected && (
-                      <div className="text-tokyo-purple font-bold animate-pulse text-2xl mr-3">
-                        ➜
-                      </div>
-                    )}
+                    <div
+                      className={`text-tokyo-purple font-bold text-2xl overflow-hidden transition-all duration-200 ${isSelected ? 'w-7 mr-3 opacity-100 translate-x-0' : 'w-0 mr-0 opacity-0 -translate-x-2'}`}
+                    >
+                      ➜
+                    </div>
 
-                    <div className={`mr-4 p-2 rounded-full border-2 ${isSelected ? 'border-tokyo-purple/80' : 'border-transparent'}`}>
-                      <Icon className={`w-6 h-6 ${item.color || 'text-tokyo-fg'}`} />
+                    <div className={`mr-4 p-2 transition-all duration-200`}>
+                      <Icon className={`w-6 h-6 transition-transform duration-200 ${item.color || 'text-tokyo-fg'} ${isSelected ? 'drop-shadow-[0_0_8px_currentColor]' : ''}`} />
                     </div>
 
                     <div className="flex flex-col">
-                      <span className={`font-bold font-mono text-lg ${isSelected ? 'text-tokyo-purple' : 'text-tokyo-fg'}`}>
+                      <span className={`font-bold font-mono text-lg transition-colors duration-200 ${isSelected ? 'text-tokyo-purple' : 'text-tokyo-fg'}`}>
                         {item.label}
                       </span>
                       {item.description && (
@@ -245,7 +253,7 @@ const SpeedDial: React.FC = () => {
       })}
 
       <div className="mt-12 text-xs text-tokyo-comment font-mono border-t border-tokyo-statusline pt-4 w-full text-center">
-        [SPEED DIAL] {selectedIndex + 1}/{FLAT_ITEMS.length}
+        [{selectedIndex + 1}/{FLAT_ITEMS.length}]
       </div>
     </div>
   );

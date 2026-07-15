@@ -177,18 +177,23 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
                 </div>
 
                 {/* Mobile Sidebar Overlay */}
-                {showExplorer && (
-                    <div className="md:hidden fixed inset-0 z-40 flex">
-                        <div className="w-64 max-w-[80%] h-full bg-tokyo-bg_dark border-r border-tokyo-statusline shadow-xl">
-                            <div className="flex items-center justify-between px-3 py-2 border-b border-tokyo-statusline text-tokyo-fg">
-                                <span className="text-xs uppercase tracking-wide text-tokyo-comment">Explorer</span>
-                                <button onClick={() => setShowExplorer(false)} className="text-tokyo-comment hover:text-tokyo-fg"><X size={14} /></button>
-                            </div>
-                            <FileExplorer className="w-full" files={files} onFileSelect={(id) => { navigateToFile(id); setShowExplorer(false); }} activeFileId={activeFileId} toggleFolder={toggleFolder} />
+                <div className={`md:hidden fixed inset-0 z-40 ${showExplorer ? '' : 'pointer-events-none'}`}>
+                    {/* Backdrop */}
+                    <div
+                        className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ease-out ${showExplorer ? 'opacity-100' : 'opacity-0'}`}
+                        onClick={() => setShowExplorer(false)}
+                    />
+                    {/* Sliding panel */}
+                    <div
+                        className={`absolute inset-y-0 left-0 w-64 max-w-[80%] h-full bg-tokyo-bg_dark border-r border-tokyo-statusline shadow-xl transition-transform duration-300 ease-out will-change-transform ${showExplorer ? 'translate-x-0' : '-translate-x-full'}`}
+                    >
+                        <div className="flex items-center justify-between px-3 py-2 border-b border-tokyo-statusline text-tokyo-fg">
+                            <span className="text-xs uppercase tracking-wide text-tokyo-comment">Explorer</span>
+                            <button onClick={() => setShowExplorer(false)} className="text-tokyo-comment hover:text-tokyo-fg"><X size={14} /></button>
                         </div>
-                        <div className="flex-1 bg-black/40" onClick={() => setShowExplorer(false)}></div>
+                        <FileExplorer className="w-full" files={files} onFileSelect={(id) => { navigateToFile(id); setShowExplorer(false); }} activeFileId={activeFileId} toggleFolder={toggleFolder} />
                     </div>
-                )}
+                </div>
 
                 {/* Main Content */}
                 <div className="flex-1 relative flex flex-col min-w-0 bg-tokyo-bg overflow-hidden">

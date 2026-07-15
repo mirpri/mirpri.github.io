@@ -71,15 +71,17 @@ export default function WorkspaceWrapper({ initialContent, initialFileName, init
                 <div className="flex-1 relative flex flex-col min-w-0 bg-tokyo-bg overflow-hidden">
                     {activeBuffer ? (
                         activeBuffer.type === 'tsx' && ComponentMap[activeBuffer.id] ? (
-                            <div className="flex-1 w-full h-full overflow-auto p-8">
+                            <div key={activeBuffer.id} className="flex-1 w-full h-full overflow-auto p-8 custom-scrollbar animate-fade-in">
                                 {React.createElement(ComponentMap[activeBuffer.id])}
                             </div>
                         ) : (
-                            <Editor
-                                buffer={activeBuffer}
-                                isActive={true}
-                                selection={visualAnchor ? { start: visualAnchor, end: { row: activeBuffer.cursorRow, col: activeBuffer.cursorCol } } : null}
-                            />
+                            <div key={activeBuffer.id} className="flex-1 min-h-0 animate-fade-in flex flex-col">
+                                <Editor
+                                    buffer={activeBuffer}
+                                    isActive={true}
+                                    selection={visualAnchor ? { start: visualAnchor, end: { row: activeBuffer.cursorRow, col: activeBuffer.cursorCol } } : null}
+                                />
+                            </div>
                         )
                     ) : (
                         <div className="flex-1 overflow-auto">
