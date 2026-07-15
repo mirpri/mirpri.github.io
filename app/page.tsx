@@ -12,7 +12,7 @@ export default function Page() {
 
     const {
         loadTime, setLoadTime,
-        files
+        files, setActiveFile
     } = useEditorStore();
 
     useEffect(() => {
@@ -22,6 +22,12 @@ export default function Page() {
             setLoadTime(time);
         }
     }, [loadTime, setLoadTime]);
+
+    // On the dashboard no file is active — clear the active file so the
+    // window title resets and the explorer/tab highlights are cleared.
+    useEffect(() => {
+        setActiveFile(null);
+    }, [setActiveFile]);
 
     const findFile = (nodes: FileNode[], id: string): FileNode | null => {
         for (const node of nodes) {

@@ -10,13 +10,13 @@ interface DashboardProps {
 }
 
 const ASCII_ART = `
-  :::   :::   ::::::::::: :::::::::  :::::::::  :::::::::  ::::::::::: 
- :+:+: :+:+:      :+:     :+:    :+: :+:    :+: :+:    :+:     :+:     
-+:+ +:+:+ +:+     +:+     +:+    +:+ +:+    +:+ +:+    +:+     +:+     
-+#+  +:+  +#+     +#+     +#++:++#:  +#++:++#+  +#++:++#:      +#+     
-+#+       +#+     +#+     +#+    +#+ +#+        +#+    +#+     +#+     
-#+#       #+#     #+#     #+#    #+# #+#        #+#    #+#     #+#     
-###       ### ########### ###    ### ###        ###    ### ########### 
+  :::   :::   ::::::::::: :::::::::  :::::::::  :::::::::  :::::::::::
+ :+:+: :+:+:      :+:     :+:    :+: :+:    :+: :+:    :+:     :+:
++:+ +:+:+ +:+     +:+     +:+    +:+ +:+    +:+ +:+    +:+     +:+
++#+  +:+  +#+     +#+     +#++:++#:  +#++:++#+  +#++:++#:      +#+
++#+       +#+     +#+     +#+    +#+ +#+        +#+    +#+     +#+
+#+#       #+#     #+#     #+#    #+# #+#        #+#    #+#     #+#
+###       ### ########### ###    ### ###        ###    ### ###########
 `;
 
 const MENU_ITEMS = [
@@ -77,7 +77,7 @@ const AsciiArt = () => {
   }, []);
 
   return (
-    <pre className="mb-10 text-tokyo-blue font-mono font-bold leading-none select-none text-[8px] sm:text-xs lg:text-sm text-center whitespace-pre w-full overflow-hidden">
+    <pre className="mb-10 text-tokyo-blue font-mono font-bold leading-none select-none text-[8px] sm:text-xs lg:text-sm whitespace-pre max-w-full animate-fade-in-up">
       {art}
     </pre>
   );
@@ -128,11 +128,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, loadTime }) => {
               href={`/${item.fileId}`}
               onClick={() => handleSelect(index)}
               onMouseEnter={() => setSelectedIndex(index)}
-              className={`flex items-center px-4 py-2 cursor-pointer transition-all duration-200 rounded-md group ${isSelected ? 'bg-tokyo-line_nr' : 'hover:bg-tokyo-bg_dark'
+              style={{ animationDelay: `${index * 60 + 120}ms` }}
+              className={`flex items-center px-4 py-2 cursor-pointer transition-all duration-200 rounded-md group animate-fade-in-up ${isSelected ? 'bg-tokyo-line_nr translate-x-1' : 'hover:bg-tokyo-bg_dark'
                 }`}
             >
+              {/* Selection Marker */}
+              <div
+                className={`text-tokyo-cyan font-bold text-lg overflow-hidden transition-all duration-200 ${isSelected ? 'w-5 opacity-100 translate-x-0' : 'w-0 opacity-0 -translate-x-2'}`}
+              >
+                ➜
+              </div>
               <div className={`w-8 flex justify-center ${isSelected ? 'text-tokyo-cyan' : 'text-tokyo-comment'}`}>
-                <Icon size={18} />
+                <Icon size={18} className={`transition-all duration-200 ${isSelected ? 'drop-shadow-[0_0_8px_currentColor]' : ''}`} />
               </div>
               <span className={`font-bold mr-4 ${isSelected ? 'text-tokyo-fg' : 'text-tokyo-comment group-hover:text-tokyo-fg'}`}>
                 {item.label}
