@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Github, Mail, HomeIcon, PenTool, KeyRound, School2, Notebook, Dog, Share2 } from 'lucide-react';
+import { Github, Mail, HomeIcon, PenTool, KeyRound, School2, Notebook, Dog, Share2, FileBarChart } from 'lucide-react';
 
 interface SpeedDialCategory {
   title: string;
@@ -82,20 +82,28 @@ const SPEED_DIAL_DATA: SpeedDialCategory[] = [
         color: 'text-tokyo-red'
       },
       {
-        id: 'puppygo',
-        label: 'Puppy Go',
-        url: 'https://puppygoapp.com',
-        icon: Dog,
-        description: 'AI-powered workout companion',
-        color: 'text-tokyo-orange'
-      },
-      {
         id: 'mirshare',
         label: 'Mirshare',
         url: 'https://share.mirpri.com',
         icon: Share2,
         description: 'File sharing service',
         color: 'text-tokyo-purple'
+      },
+      {
+        id: 'paperxray',
+        label: 'PaperXray',
+        url: 'https://paperxray.mirpri.com',
+        icon: FileBarChart,
+        description: 'Research paper search and analysis',
+        color: 'text-tokyo-yellow'
+      },
+      {
+        id: 'puppygo',
+        label: 'Puppy Go',
+        url: 'https://puppygoapp.com',
+        icon: Dog,
+        description: 'AI-powered workout companion',
+        color: 'text-tokyo-orange'
       }
     ]
   }
